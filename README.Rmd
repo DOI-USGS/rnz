@@ -17,6 +17,18 @@
 
 This is a work in progress package aiming to provide an RNetCDF-like set of functions that wrap the [`pizzarr`](https://github.com/keller-mark/pizzarr) package.
 
+```{r demo}
+
+z <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
+
+bcsd <- rnz::open_zarr(z)
+
+class(bcsd)
+
+bcsd
+
+```
+
 ```{r disclaimer, child="DISCLAIMER.md", eval=TRUE}
 
 ```
