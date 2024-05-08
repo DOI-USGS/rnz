@@ -1,0 +1,26 @@
+---
+  output: github_document
+---
+
+  <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# `rnz` R NetCDF Zarr
+
+This is a work in progress package aiming to provide an RNetCDF-like set of functions that wrap the [`pizzarr`](https://github.com/keller-mark/pizzarr) package.
+
+```{r disclaimer, child="DISCLAIMER.md", eval=TRUE}
+
+```
+
+[
+  ![CC0](https://i.creativecommons.org/p/zero/1.0/88x31.png)
+](https://creativecommons.org/publicdomain/zero/1.0/)

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "rnz",
+    "organization": "U.S. Geological Survey",
+    "description": "",
+    "version": "main",
+    "status": "Development",
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain, CC0-1.0",
+          "URL": "https://code.usgs.gov/wma/nhgf/geo-data-portal/rnz/-/raw/main/LICENSE.md"
+        }
+      ]
+    },
+    "homepageURL": "https://code.usgs.gov/wma/nhgf/geo-data-portal/rnz/",
+    "downloadURL": "https://code.usgs.gov/wma/nhgf/geo-data-portal/rnz/-/archive/main/rnz-main.zip",
+    "disclaimerURL": "https://code.usgs.gov/wma/nhgf/geo-data-portal/rnz/-/raw/main/DISCLAIMER.md",
+    "repositoryURL": "https://code.usgs.gov/wma/nhgf/geo-data-portal/rnz.git",
+    "vcs": "git",
+    "laborHours": 1,
+    "tags": [
+      "R",
+      "USGS"
+    ],
+    "languages": [
+      "R"
+    ],
+    "contact": {
+      "name": "David Blodgett",
+      "email": "dblodgett@usgs.gov"
+    },
+    "date": {
+      "metadataLastUpdated": "2024-05-08"
+    }
+  }
+]
