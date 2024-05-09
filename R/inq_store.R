@@ -6,7 +6,7 @@
 #'
 #' z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
 #'
-#' zarr_inq_store(z)
+#' inq_store(z)
 #'
 #' # equivalent data in NetCDF
 #' requireNamespace("RNetCDF", quietly = TRUE) {
@@ -17,7 +17,7 @@
 #'
 inq_store <- function(z) {
 
-  if(!inherits(z, "ZarrGroup")) stop("z must be a zarr group")
+  is_zarr(z)
 
   vars <- nodots(z$get_store()$listdir())
 
