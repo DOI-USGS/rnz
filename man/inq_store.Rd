@@ -10,7 +10,7 @@ inq_store(z)
 \item{z}{an open ZarrGroup as returned by \link{open_zarr}}
 }
 \value{
-list similar to that returned by file.inq.nc
+list similar to that returned by \link[RNetCDF]{file.inq.nc}
 }
 \description{
 Inquire Zarr Store

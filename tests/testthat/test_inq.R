@@ -21,3 +21,8 @@ test_that("inq grp", {
                     varids = c(0, 1, 2, 3, 4),
                     ngatts = 30L))
 })
+
+test_that("inq dim", {
+  expect_equal(inq_dim(open_zarr(z), 0),
+               list(id = 0, name = "latitude", length = 33L))
+})

@@ -1,6 +1,6 @@
 #' @title Inquire Zarr Store
 #' @param z an open ZarrGroup as returned by \link{open_zarr}
-#' @return list similar to that returned by file.inq.nc
+#' @return list similar to that returned by \link[RNetCDF]{file.inq.nc}
 #' @export
 #' @examples
 #'

@@ -4,7 +4,7 @@
 #'
 #' @param z an open ZarrGroup as returned by \link{open_zarr}
 #' @param group NOTUSED
-#' @return list similar to that returned by grp.inq.nc
+#' @return list similar to that returned by \link[RNetCDF]{grp.inq.nc}
 #' @export
 #' @examples
 #'
