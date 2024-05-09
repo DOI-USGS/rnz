@@ -7,7 +7,10 @@
 open_zarr(con)
 }
 \arguments{
-\item{con}{a pizzarr store or path to a zarr store}
+\item{store}{a pizzarr store or path to a zarr store}
+}
+\value{
+ZarrGroup
 }
 \description{
 open zarr

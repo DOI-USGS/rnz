@@ -10,7 +10,9 @@ Authors@R:
            comment = c(ORCID = "0000-0001-9489-1710"))
 Description: Implements a RNetCDF-like set of functions for zarr data based on the pizzarr package.
 Imports: pizzarr
-Suggests: RNetCDF
+Suggests: 
+    RNetCDF,
+    testthat (>= 3.0.0)
 License: CC0
 Config/testthat/parallel: true
 Config/testthat/edition: 3

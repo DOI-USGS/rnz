@@ -1,5 +1,6 @@
 #' @title open zarr
-#' @param con a pizzarr store or path to a zarr store
+#' @param store a pizzarr store or path to a zarr store
+#' @return ZarrGroup
 #' @importFrom pizzarr zarr_open
 #' @export
 #' @examples
