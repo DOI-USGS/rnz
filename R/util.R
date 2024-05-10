@@ -52,6 +52,8 @@ get_dim_size <- function(z, vars = get_vars(z)) {
 
   names(out) <- vars
 
+  out
+
 }
 
 # just pull out all the variables from the root group.
@@ -65,7 +67,7 @@ get_vars <- function(z) {
 get_coord_vars <- function(z, vars = get_vars(z)) {
   is_zarr(z)
 
-  dims <- get_dims(z)
+  dims <- get_unique_dims(z)
 
   vars[vars %in% dims]
 }
@@ -85,4 +87,22 @@ get_rep_var <- function(z, dim_name) {
 
   # otherwise return the first variable on that dimension
   all_var_dims[sapply(all_var_dims, \(x) any(grepl(dim_name, x)))][1][[1]]$name
+}
+
+get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
+  if(is.numeric(var_name)) {
+    var_name <- get_vars(z)[var_name + 1]
+  }
+
+  if(!is.null(var_name)) {
+    out <- z$get_item(var_name)$get_attrs()$to_list()
+  } else {
+    out <- z$get_attrs$to_list()
+  }
+
+  if(noarray) {
+    out <- out[names(out) != "_ARRAY_DIMENSIONS"]
+  }
+
+  out
 }
