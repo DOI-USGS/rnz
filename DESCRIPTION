@@ -11,7 +11,6 @@ Authors@R:
 Description: Implements a RNetCDF-like set of functions for zarr data based on the pizzarr package.
 Imports: pizzarr, tools, utils
 Suggests: 
-    Rarr,
     knitr,
     rmarkdown,
     RNetCDF,

@@ -6,13 +6,15 @@
 #' list.files(z_dir(), recursive = TRUE, all.files = TRUE)
 #'
 z_dir <- function() {
-  dir <- tools::R_user_dir(package = "rnz")
+  z <- "bcsd_obs_1999.zarr"
 
-  z_zip <- system.file("extdata", "bcsd_obs_1999.zarr.zip", package = "rnz")
+  dir <- file.path(tools::R_user_dir(package = "rnz"), z)
+
+  z_zip <- system.file("extdata", "bcsd_obs_1999.zip", package = "rnz")
 
   suppressWarnings(utils::unzip(z_zip, exdir = dir, overwrite = FALSE))
 
-  normalizePath(file.path(dir, "bcsd_obs_1999.zarr"))
+  normalizePath(dir)
 }
 
 # useful for getting only the data arrays

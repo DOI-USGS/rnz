@@ -142,12 +142,13 @@ pr[pr > 1000] <- NA
 
 image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
       useRaster = TRUE, axes = FALSE)
+```
 
+```{r}
 pr <- RNetCDF::var.get.nc(nc, "pr")
 
 image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
       useRaster = TRUE, axes = FALSE)
-
 ```
 
 ### Get an attribute
