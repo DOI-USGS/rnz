@@ -12,6 +12,8 @@
 #'
 #' inq_dim(z, 0)
 #'
+#' inq_dim(z, "latitude")
+#'
 #' # equivalent data in NetCDF
 #' requireNamespace("RNetCDF", quietly = TRUE) {
 #'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
@@ -22,6 +24,8 @@
 inq_dim <- function(z, dim) {
 
   is_zarr(z)
+
+  if(is.character(dim)) dim <- dim_char_to_id(z, dim)
 
   stopifnot(is.numeric(dim), length(dim) == 1, as.integer(dim) == dim)
 
@@ -36,3 +40,12 @@ inq_dim <- function(z, dim) {
        length = rep_var_len)
 
 }
+
+dim_char_to_id <- function(z, char_dim) {
+  out <- which(get_unique_dims(z) == char_dim) - 1 # 0 indexed
+
+  if(length(out) == 0) stop("dimension not found")
+
+  out
+}
+

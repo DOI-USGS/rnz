@@ -27,6 +27,9 @@ test_that("inq grp", {
 test_that("inq dim", {
   expect_equal(inq_dim(z, 0),
                list(id = 0, name = "latitude", length = 33L))
+
+  expect_equal(inq_dim(z, 0),
+               inq_dim(z, "latitude"))
 })
 
 

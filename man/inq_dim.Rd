@@ -23,6 +23,8 @@ z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
 
 inq_dim(z, 0)
 
+inq_dim(z, "latitude")
+
 # equivalent data in NetCDF
 requireNamespace("RNetCDF", quietly = TRUE) {
   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")

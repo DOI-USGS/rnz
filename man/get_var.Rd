@@ -4,13 +4,20 @@
 \alias{get_var}
 \title{Get Zarr Variable}
 \usage{
-get_var(z, var)
+get_var(z, var, start = NA, count = NA)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_zarr}}
 
 \item{var}{integer or character zero-based index id of variable of interest
 or name of variable of interest.}
+
+\item{start}{integer vector with length equal to the number of dimensions of var.
+Uses R-style 1 indexing. If NA the entire array is returned.}
+
+\item{count}{integer vector with length equal to the number of dimensions of var.
+Specifies the size of the returned array along the dimension in question. Can not
+be NA if start is not NA. -1 can be used to indicate all of a given dimension.}
 }
 \value{
 array of data
@@ -25,10 +32,18 @@ z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
 latitude <- get_var(z, 0)
 
 class(latitude)
-
 dim(latitude)
 
 pr <- get_var(z, "pr")
+
+image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
+      useRaster = TRUE, axes = FALSE)
+
+dim(pr)
+
+# subsetting
+
+pr <- get_var(z, "pr", start = c(1, 1, 1), count = c(5, 5, -1))
 
 dim(pr)
 

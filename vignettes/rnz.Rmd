@@ -1,0 +1,171 @@
+---
+title: "rnz R NetCDF Zarr"
+author: "dblodgett@usgs.gov"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rnz R NetCDF Zarr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style type="text/css">
+   .main-container {max-width: 100%;}
+   .row {display: flex;}
+   .column {flex: 50%;}
+</style>
+
+```{r setup, include = FALSE}
+local <- (Sys.getenv("BUILD_VIGNETTES") == "TRUE")
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  comment = "#>",
+  fig.width=4,
+  fig.height=4,
+  fig.align = "center",
+  eval=local
+)
+
+oldoption <- options(scipen = 9999)
+```
+
+# `rnz` R NetCDF Zarr
+
+`rnz` wraps the `pizzarr` package providing very similar set of functions to the 
+`RNetCDF` package. The intent is to allow access to zarr in essentially the same 
+way as is done with NetCDF such that packages with a NetCDF backend can easily
+implement an equivalent ZARR back end using base R.
+
+This vignette shows the most basic operation of the package using a core
+demo dataset derived from: https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/
+
+A NetCDF and Zarr copy of the dataset are included.
+
+```{r}
+
+z_dir <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
+
+gsub(dirname(z_dir), "",
+     list.dirs(z_dir, recursive = TRUE))
+
+#TODO: get a print.zarr function going like print.nc
+(z <- rnz::open_zarr(z_dir))
+
+nc_file <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+
+(nc <- RNetCDF::open.nc(nc_file))
+
+cat(c(capture.output(RNetCDF::print.nc(nc))[1:25], "..."), sep = "\n")
+
+```
+
+## "Inquire" about elements of a Zarr store
+
+We can do all the normal inquire stuff using 0-indexed ids or names.
+
+### Inquire about a store 
+
+```{r}
+RNetCDF::file.inq.nc(nc)
+
+rnz::inq_store(z)
+```
+
+### Inquire about a group
+
+TODO: get rnz working with more than root groups
+
+```{r}
+
+RNetCDF::grp.inq.nc(nc)
+
+rnz::inq_grp(z)
+
+```
+
+### Inquire about a dimension
+
+```{r}
+
+RNetCDF::dim.inq.nc(nc, 2)
+
+rnz::inq_dim(z, 2)
+
+RNetCDF::dim.inq.nc(nc, "time")
+
+rnz::inq_dim(z, "time")
+```
+
+### Inquire about a variable
+
+```{r}
+
+RNetCDF::var.inq.nc(nc, 4)
+
+rnz::inq_var(z, 4)
+
+RNetCDF::var.inq.nc(nc, "time")
+
+rnz::inq_var(z, "time")
+```
+
+### Inquire about an attribute
+
+```{r}
+RNetCDF::att.inq.nc(nc, "time", "units")
+
+rnz::inq_att(z, "time", "units")
+
+RNetCDF::att.inq.nc(nc, 4, 1)
+
+rnz::inq_att(z, 4, 3)
+```
+### Get a variable
+
+```{r}
+
+RNetCDF::var.get.nc(nc, "time")
+
+rnz::get_var(z, "time")
+
+RNetCDF::var.get.nc(nc, variable = "pr", 
+                    start = c(1,1,5), count = c(3,3,1))
+
+rnz::get_var(z, var = "pr", 
+             start = c(1,1,5), count = c(3,3,1))
+
+pr <- rnz::get_var(z, "pr") |>
+  aperm(c(3,2,1))
+
+# TODO: figure out NA handling
+pr[pr > 1000] <- NA
+
+image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
+      useRaster = TRUE, axes = FALSE)
+
+pr <- RNetCDF::var.get.nc(nc, "pr")
+
+image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
+      useRaster = TRUE, axes = FALSE)
+
+```
+
+### Get an attribute
+
+```{r}
+RNetCDF::att.get.nc(nc, "time", "units")
+
+rnz::get_att(z, "time", "units")
+
+RNetCDF::att.get.nc(nc, 4, 1)
+
+rnz::get_att(z, 4, 3)
+```
+That's all for now.
+
+```{r include = FALSE}
+
+options(oldoption)
+
+```
