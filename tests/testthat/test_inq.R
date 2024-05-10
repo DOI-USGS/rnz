@@ -56,4 +56,6 @@ test_that("inq att", {
 
   expect_equal(inq_att(z, -1, 2),
                inq_att(z, "global", "Conventions"))
+
+  expect_error(inq_att(z, "pr", "br"), "attribute not found")
 })

@@ -22,26 +22,20 @@
 #'
 inq_var <- function(z, var) {
 
-  is_zarr(z)
+  v <- var_prep(z, var)
 
-  if(is.character(var)) var <- var_char_to_id(z, var)
+  num_dim <- z$get_item(v$var_name)$get_ndim()
 
-  stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
-
-  var_name <- get_vars(z)[(var + 1)]
-
-  num_dim <- z$get_item(var_name)$get_ndim()
-
-  type <- z$get_item(var_name)$get_dtype()$dtype
+  type <- z$get_item(v$var_name)$get_dtype()$dtype
 
   all_dims <- get_unique_dims(z)
 
-  dim_ids <- which(get_all_dims(z, var_name)[[1]]$name == all_dims) - 1
+  dim_ids <- which(get_all_dims(z, v$var_name)[[1]]$name == all_dims) - 1
 
-  num_atts <- length(get_attributes(z, var_name))
+  num_atts <- length(get_attributes(z, v$var_name))
 
-  list(id = var,
-       name = var_name,
+  list(id = v$var,
+       name = v$var_name,
        type = type,
        ndims = num_dim,
        dimids = dim_ids,

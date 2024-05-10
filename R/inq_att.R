@@ -28,23 +28,12 @@
 #'
 inq_att <- function(z, var, att) {
 
-  is_zarr(z)
+  a <- att_prep(z, var, att)
 
-  if(var == "global") var <- -1
-
-  if(is.character(var)) var <- var_char_to_id(z, var)
-  if(is.character(att)) att <- att_char_to_id(z, var, att)
-
-  stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
-
-  atts <- get_attributes(z, var, noarray = TRUE)
-
-  if(att + 1 > length(atts)) stop("Index is greater than number of attributes. Zero index issue?")
-
-  list(id = att,
-       name = names(atts)[att + 1],
-       type = class(unlist(atts[att + 1])),
-       length = length(atts[[att + 1]]))
+  list(id = a$att,
+       name = names(a$atts)[a$att + 1],
+       type = class(unlist(a$atts[a$att + 1])),
+       length = length(a$atts[[a$att + 1]]))
 
 }
 

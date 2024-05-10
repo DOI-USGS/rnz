@@ -106,3 +106,33 @@ get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
 
   out
 }
+
+att_prep <- function(z, var, att) {
+  is_zarr(z)
+
+  if(var == "global") var <- -1
+
+  if(is.character(var)) var <- var_char_to_id(z, var)
+  if(is.character(att)) att <- att_char_to_id(z, var, att)
+
+  stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
+
+  atts <- get_attributes(z, var, noarray = TRUE)
+
+  if(att + 1 > length(atts)) stop("Index is greater than number of attributes. Zero index issue?")
+
+  list(atts = atts, var = var, att = att)
+}
+
+
+var_prep <- function(z, var) {
+  is_zarr(z)
+
+  if(is.character(var)) var <- var_char_to_id(z, var)
+
+  stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
+
+  var_name <- get_vars(z)[(var + 1)]
+
+  return(list(var = var, var_name = var_name))
+}
