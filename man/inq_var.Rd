@@ -9,7 +9,8 @@ inq_var(z, var)
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_zarr}}
 
-\item{var}{integer zero-based index id of variable of interest}
+\item{var}{integer or character zero-based index id of variable of interest
+or name of variable of interest.}
 }
 \value{
 list similar to that returned by \link[RNetCDF]{var.inq.nc}

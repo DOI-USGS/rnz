@@ -1,7 +1,8 @@
 #' @title Inquire Zarr Variable
 #'
 #' @inheritParams inq_store
-#' @param var integer zero-based index id of variable of interest
+#' @param var integer or character zero-based index id of variable of interest
+#' or name of variable of interest.
 #' @return list similar to that returned by \link[RNetCDF]{var.inq.nc}
 #' @export
 #' @examples
@@ -9,6 +10,8 @@
 #' z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
 #'
 #' inq_var(z, 0)
+#'
+#' inq_var(z, "pr")
 #'
 #' # equivalent data in NetCDF
 #' requireNamespace("RNetCDF", quietly = TRUE) {

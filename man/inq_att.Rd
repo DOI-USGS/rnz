@@ -9,10 +9,11 @@ inq_att(z, var, att)
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_zarr}}
 
-\item{var}{integer zero-based index id of variable of interest. If missing
-or -1 for global.}
+\item{var}{integer or character zero-based index id of variable of interest
+or name of variable of interest. -1 or "global" for global attributes}
 
-\item{att}{integer zero-based index id of attribute of interest}
+\item{att}{integer or character zero-based index id of attribute of interest
+or name of attribute of interest.}
 }
 \value{
 list similar to that returned by \link[RNetCDF]{att.inq.nc}
@@ -24,11 +25,13 @@ Inquire Zarr Attribute
 
 z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
 
-inq_att(z, att = 0)
-
 inq_att(z, -1, 0)
 
-inq_att(z, 0, 0)
+inq_att(z, "global", "Conventions")
+
+inq_att(z, 0, 3)
+
+inq_att(z, "latitude", "long_name")
 
 # equivalent data in NetCDF
 requireNamespace("RNetCDF", quietly = TRUE) {
