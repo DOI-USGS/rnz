@@ -19,7 +19,7 @@ This is a work in progress package aiming to provide an RNetCDF-like set of func
 
 ```{r demo}
 
-z <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
+z <- z_dir()
 
 bcsd <- rnz::open_zarr(z)
 

@@ -9,7 +9,7 @@ of functions that wrap the
 
 ``` r
 
-z <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
+z <- z_dir()
 
 bcsd <- rnz::open_zarr(z)
 

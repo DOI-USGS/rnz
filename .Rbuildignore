@@ -1,2 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+DISCLAIMER.md
+README.Rmd
+code.json
+LICENSE

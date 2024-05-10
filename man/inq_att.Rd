@@ -23,7 +23,7 @@ Inquire Zarr Attribute
 }
 \examples{
 
-z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+z <- open_zarr(z_dir())
 
 inq_att(z, -1, 0)
 
@@ -34,7 +34,7 @@ inq_att(z, 0, 3)
 inq_att(z, "latitude", "long_name")
 
 # equivalent data in NetCDF
-requireNamespace("RNetCDF", quietly = TRUE) {
+if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 
   (RNetCDF::att.inq.nc(RNetCDF::open.nc(nc), 0, 0))

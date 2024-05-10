@@ -7,14 +7,14 @@
 #' @export
 #' @examples
 #'
-#' z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+#' z <- open_zarr(z_dir())
 #'
 #' inq_var(z, 0)
 #'
 #' inq_var(z, "pr")
 #'
 #' # equivalent data in NetCDF
-#' requireNamespace("RNetCDF", quietly = TRUE) {
+#' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 #'
 #'   (RNetCDF::var.inq.nc(RNetCDF::open.nc(nc), 0))

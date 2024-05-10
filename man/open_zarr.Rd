@@ -4,7 +4,7 @@
 \alias{open_zarr}
 \title{open zarr}
 \usage{
-open_zarr(con)
+open_zarr(store)
 }
 \arguments{
 \item{store}{a pizzarr store or path to a zarr store}
@@ -16,7 +16,7 @@ ZarrGroup
 open zarr
 }
 \examples{
-z <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
+z <- z_dir()
 
 bcsd <- open_zarr(z)
 
@@ -31,7 +31,7 @@ bcsd <- open_zarr(zarr)
 class(bcsd)
 
 # equivalent data in NetCDF
-requireNamespace("RNetCDF", quietly = TRUE) {
+if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 
   (RNetCDF::open.nc(nc))

@@ -9,8 +9,11 @@ Authors@R:
            email = "dblodgett@usgs.gov",
            comment = c(ORCID = "0000-0001-9489-1710"))
 Description: Implements a RNetCDF-like set of functions for zarr data based on the pizzarr package.
-Imports: pizzarr
+Imports: pizzarr, tools, utils
 Suggests: 
+    Rarr,
+    knitr,
+    rmarkdown,
     RNetCDF,
     testthat (>= 3.0.0)
 License: CC0
@@ -19,6 +22,5 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
-LazyData: true
 RoxygenNote: 7.3.1
 URL: https://github.com/DOI-USGS/rnz

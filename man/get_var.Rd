@@ -27,7 +27,7 @@ Get Zarr Variable
 }
 \examples{
 
-z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+z <- open_zarr(z_dir())
 
 latitude <- get_var(z, 0)
 
@@ -48,7 +48,7 @@ pr <- get_var(z, "pr", start = c(1, 1, 1), count = c(5, 5, -1))
 dim(pr)
 
 # equivalent data in NetCDF
-requireNamespace("RNetCDF", quietly = TRUE) {
+if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 
   (RNetCDF::var.get.nc(RNetCDF::open.nc(nc), 0))

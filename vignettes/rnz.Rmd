@@ -15,7 +15,7 @@ vignette: >
 </style>
 
 ```{r setup, include = FALSE}
-local <- (Sys.getenv("BUILD_VIGNETTES") == "TRUE")
+eval <-  requireNamespace("RNetCDF", quietly = TRUE)
 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
   fig.width=4,
   fig.height=4,
   fig.align = "center",
-  eval=local
+  eval=eval
 )
 
 oldoption <- options(scipen = 9999)
@@ -44,13 +44,12 @@ A NetCDF and Zarr copy of the dataset are included.
 
 ```{r}
 
-z_dir <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
-
-gsub(dirname(z_dir), "",
-     list.dirs(z_dir, recursive = TRUE))
+gsub(normalizePath(dirname(rnz::z_dir())), "",
+     list.files(rnz::z_dir(), recursive = TRUE, all.files = TRUE), 
+     fixed = TRUE)
 
 #TODO: get a print.zarr function going like print.nc
-(z <- rnz::open_zarr(z_dir))
+(z <- rnz::open_zarr(rnz::z_dir()))
 
 nc_file <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 

@@ -1,3 +1,20 @@
+
+#' Zarr demo data directory
+#' unzips and returns a demo Zarr store directory.
+#' @export
+#' @examples
+#' list.files(z_dir(), recursive = TRUE, all.files = TRUE)
+#'
+z_dir <- function() {
+  dir <- tools::R_user_dir(package = "rnz")
+
+  z_zip <- system.file("extdata", "bcsd_obs_1999.zarr.zip", package = "rnz")
+
+  suppressWarnings(utils::unzip(z_zip, exdir = dir, overwrite = FALSE))
+
+  normalizePath(file.path(dir, "bcsd_obs_1999.zarr"))
+}
+
 # useful for getting only the data arrays
 nodots <- function(x) {
   x[!grepl("\\.zattrs|\\.zgroup|\\.zmetadata", x)]

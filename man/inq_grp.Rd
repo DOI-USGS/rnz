@@ -19,12 +19,12 @@ NOTE: only functions on a root group thus far
 }
 \examples{
 
-z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+z <- open_zarr(z_dir())
 
 inq_grp(z)
 
 # equivalent data in NetCDF
-requireNamespace("RNetCDF", quietly = TRUE) {
+if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 
   (RNetCDF::grp.inq.nc(RNetCDF::open.nc(nc)))

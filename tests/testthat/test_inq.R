@@ -1,6 +1,4 @@
-z_dir <- system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz")
-
-z <- open_zarr(z_dir)
+z <- open_zarr(z_dir())
 
 test_that("inq store", {
   expect_error(inq_store(z_dir), "z must be a zarr group")

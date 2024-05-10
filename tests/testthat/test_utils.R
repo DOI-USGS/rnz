@@ -1,4 +1,4 @@
-z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+z <- open_zarr(z_dir())
 
 test_that("utils", {
 

@@ -5,7 +5,7 @@
 #' @export
 #' @examples
 #'
-#' z <- open_zarr(system.file("extdata", "bcsd_obs_1999.zarr", package = "rnz"))
+#' z <- open_zarr(z_dir())
 #'
 #' get_att(z, -1, 2)
 #'
@@ -16,7 +16,7 @@
 #' get_att(z, "latitude", "long_name")
 #'
 #' # equivalent data in NetCDF
-#' requireNamespace("RNetCDF", quietly = TRUE) {
+#' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 #'
 #'   (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
