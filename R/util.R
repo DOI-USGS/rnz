@@ -90,14 +90,14 @@ get_rep_var <- function(z, dim_name) {
 }
 
 get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
-  if(is.numeric(var_name)) {
+  if(is.numeric(var_name)) { # expect 0 indexed
     var_name <- get_vars(z)[var_name + 1]
   }
 
-  if(!is.null(var_name)) {
+  if(!is.null(var_name) & length(var_name) != 0) {
     out <- z$get_item(var_name)$get_attrs()$to_list()
   } else {
-    out <- z$get_attrs$to_list()
+    out <- z$get_attrs()$to_list()
   }
 
   if(noarray) {

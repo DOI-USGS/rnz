@@ -81,3 +81,15 @@ test_that("nodots", {
   expect_equal(nodots(z$get_store()$listdir()),
                c("latitude", "longitude", "pr", "tas", "time"))
 })
+
+test_that("var_char_to_id", {
+  expect_equal(var_char_to_id(z, "pr"), 2)
+
+  expect_error(var_char_to_id(z, "br"), "variable not found")
+})
+
+test_that("att_char_to_id", {
+  expect_equal(att_char_to_id(z, "pr", "units"), 3)
+
+  expect_equal(att_char_to_id(z, 2, "units"), 3)
+})

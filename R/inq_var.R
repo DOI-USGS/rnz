@@ -21,6 +21,8 @@ inq_var <- function(z, var) {
 
   is_zarr(z)
 
+  if(is.character(var)) var <- var_char_to_id(z, var)
+
   stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
 
   var_name <- get_vars(z)[(var + 1)]
@@ -42,4 +44,13 @@ inq_var <- function(z, var) {
        dimids = dim_ids,
        natts = num_atts)
 
+}
+
+
+var_char_to_id <- function(z, char_var) {
+  out <- which(get_vars(z) == char_var) - 1 # 0 indexed
+
+  if(length(out) == 0) stop("variable not found")
+
+  out
 }
