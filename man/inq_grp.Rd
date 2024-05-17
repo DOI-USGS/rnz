@@ -19,7 +19,7 @@ NOTE: only functions on a root group thus far
 }
 \examples{
 
-z <- open_zarr(z_dir())
+z <- open_zarr(z_demo())
 
 inq_grp(z)
 

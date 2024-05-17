@@ -9,43 +9,81 @@ of functions that wrap the
 
 ``` r
 
-z <- z_dir()
+z <- rnz::z_demo()
 
 bcsd <- rnz::open_zarr(z)
 
 class(bcsd)
 #> [1] "ZarrGroup" "R6"
 
-bcsd
-#> <ZarrGroup>
-#>   Public:
-#>     clone: function (deep = FALSE) 
-#>     contains_item: function (item) 
-#>     create_dataset: function (name, data = NA, ...) 
-#>     create_group: function (name, overwrite = FALSE) 
-#>     get_attrs: function () 
-#>     get_chunk_store: function () 
-#>     get_item: function (item) 
-#>     get_meta: function () 
-#>     get_name: function () 
-#>     get_path: function () 
-#>     get_read_only: function () 
-#>     get_store: function () 
-#>     get_synchronizer: function () 
-#>     initialize: function (store, path = NA, read_only = FALSE, chunk_store = NA, 
-#>   Private:
-#>     attrs: Attributes, R6
-#>     cache_attrs: NULL
-#>     chunk_store: NA
-#>     create_dataset_nosync: function (name, data = NA, ...) 
-#>     create_group_nosync: function (name, overwrite = FALSE) 
-#>     item_path: function (item) 
-#>     key_prefix: 
-#>     meta: list
-#>     path: 
-#>     read_only: TRUE
-#>     store: DirectoryStore, Store, R6
-#>     synchronizer: NULL
+# TODO: implement a nc_dump print-like method to print CDL for a zarr object
+
+rnz::inq_store(bcsd) |> str()
+#> List of 4
+#>  $ ndims : int 3
+#>  $ nvars : int 5
+#>  $ ngatts: int 30
+#>  $ format: chr "DirectoryStore"
+
+rnz::inq_grp(bcsd) |> str() # only the root group supported
+#> List of 6
+#>  $ grps    : list()
+#>  $ name    : chr "/"
+#>  $ fullname: chr "/"
+#>  $ dimids  : num [1:3] 0 1 2
+#>  $ varids  : num [1:5] 0 1 2 3 4
+#>  $ ngatts  : int 30
+
+rnz::inq_dim(bcsd, 0) |> str()
+#> List of 3
+#>  $ id    : num 0
+#>  $ name  : chr "latitude"
+#>  $ length: int 33
+rnz::inq_dim(bcsd, "latitude") |> str()
+#> List of 3
+#>  $ id    : num 0
+#>  $ name  : chr "latitude"
+#>  $ length: int 33
+
+rnz::inq_var(bcsd, 0) |> str()
+#> List of 6
+#>  $ id    : num 0
+#>  $ name  : chr "latitude"
+#>  $ type  : chr "<f4"
+#>  $ ndims : int 1
+#>  $ dimids: num 0
+#>  $ natts : int 7
+rnz::inq_var(bcsd, "latitude") |> str()
+#> List of 6
+#>  $ id    : num 0
+#>  $ name  : chr "latitude"
+#>  $ type  : chr "<f4"
+#>  $ ndims : int 1
+#>  $ dimids: num 0
+#>  $ natts : int 7
+
+rnz::inq_att(bcsd, 0, 5) |> str()
+#> List of 4
+#>  $ id    : num 5
+#>  $ name  : chr "units"
+#>  $ type  : chr "character"
+#>  $ length: int 1
+rnz::inq_att(bcsd, "latitude", "units") |> str()
+#> List of 4
+#>  $ id    : num 5
+#>  $ name  : chr "units"
+#>  $ type  : chr "character"
+#>  $ length: int 1
+
+rnz::get_var(bcsd, 0) |> str()
+#>  num [1:33(1d)] 33.1 33.2 33.3 33.4 33.6 ...
+rnz::get_var(bcsd, "latitude") |> str()
+#>  num [1:33(1d)] 33.1 33.2 33.3 33.4 33.6 ...
+
+rnz::get_att(bcsd, 0, 5)
+#> [1] "degrees_north"
+rnz::get_att(bcsd, "time", "units")
+#> [1] "days since 1950-01-01"
 ```
 
 # Disclaimer

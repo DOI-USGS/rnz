@@ -3,9 +3,9 @@
 #' unzips and returns a demo Zarr store directory.
 #' @export
 #' @examples
-#' list.files(z_dir(), recursive = TRUE, all.files = TRUE)
+#' list.files(z_demo(), recursive = TRUE, all.files = TRUE)
 #'
-z_dir <- function() {
+z_demo <- function() {
   z <- "bcsd_obs_1999.zarr"
 
   dir <- file.path(tools::R_user_dir(package = "rnz"), z)

@@ -16,7 +16,7 @@ ZarrGroup
 open zarr
 }
 \examples{
-z <- z_dir()
+z <- z_demo()
 
 bcsd <- open_zarr(z)
 

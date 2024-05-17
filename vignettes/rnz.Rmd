@@ -44,12 +44,12 @@ A NetCDF and Zarr copy of the dataset are included.
 
 ```{r}
 
-gsub(normalizePath(dirname(rnz::z_dir())), "",
-     list.files(rnz::z_dir(), recursive = TRUE, all.files = TRUE), 
+gsub(normalizePath(dirname(rnz::z_demo())), "",
+     list.files(rnz::z_demo(), recursive = TRUE, all.files = TRUE), 
      fixed = TRUE)
 
 #TODO: get a print.zarr function going like print.nc
-(z <- rnz::open_zarr(rnz::z_dir()))
+(z <- rnz::open_zarr(rnz::z_demo()))
 
 nc_file <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 

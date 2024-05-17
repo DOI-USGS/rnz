@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #'
-#' z <- open_zarr(z_dir())
+#' z <- open_zarr(z_demo())
 #'
 #' latitude <- get_var(z, 0)
 #'

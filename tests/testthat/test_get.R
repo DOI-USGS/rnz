@@ -1,6 +1,6 @@
-z_dir <- z_dir()
+z_demo <- z_demo()
 
-z <- open_zarr(z_dir)
+z <- open_zarr(z_demo)
 
 test_that("get_att", {
   expect_equal(

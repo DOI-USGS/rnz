@@ -4,7 +4,7 @@
 #' @importFrom pizzarr zarr_open
 #' @export
 #' @examples
-#' z <- z_dir()
+#' z <- z_demo()
 #'
 #' bcsd <- open_zarr(z)
 #'

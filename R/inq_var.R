@@ -7,7 +7,7 @@
 #' @export
 #' @examples
 #'
-#' z <- open_zarr(z_dir())
+#' z <- open_zarr(z_demo())
 #'
 #' inq_var(z, 0)
 #'

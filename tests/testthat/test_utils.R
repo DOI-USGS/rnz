@@ -1,4 +1,4 @@
-z <- open_zarr(z_dir())
+z <- open_zarr(z_demo())
 
 test_that("utils", {
 

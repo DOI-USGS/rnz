@@ -1,4 +1,4 @@
-z <- z_dir()
+z <- z_demo()
 
 test_that("open example", {
   bcsd <- open_zarr(z)

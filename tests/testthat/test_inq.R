@@ -1,7 +1,7 @@
-z <- open_zarr(z_dir())
+z <- open_zarr(z_demo())
 
 test_that("inq store", {
-  expect_error(inq_store(z_dir), "z must be a zarr group")
+  expect_error(inq_store(z_demo), "z must be a zarr group")
 
   expect_equal(inq_store(z),
                list(ndims = 3L,

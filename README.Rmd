@@ -19,13 +19,32 @@ This is a work in progress package aiming to provide an RNetCDF-like set of func
 
 ```{r demo}
 
-z <- z_dir()
+z <- rnz::z_demo()
 
 bcsd <- rnz::open_zarr(z)
 
 class(bcsd)
 
-bcsd
+# TODO: implement a nc_dump print-like method to print CDL for a zarr object
+
+rnz::inq_store(bcsd) |> str()
+
+rnz::inq_grp(bcsd) |> str() # only the root group supported
+
+rnz::inq_dim(bcsd, 0) |> str()
+rnz::inq_dim(bcsd, "latitude") |> str()
+
+rnz::inq_var(bcsd, 0) |> str()
+rnz::inq_var(bcsd, "latitude") |> str()
+
+rnz::inq_att(bcsd, 0, 5) |> str()
+rnz::inq_att(bcsd, "latitude", "units") |> str()
+
+rnz::get_var(bcsd, 0) |> str()
+rnz::get_var(bcsd, "latitude") |> str()
+
+rnz::get_att(bcsd, 0, 5)
+rnz::get_att(bcsd, "time", "units")
 
 ```
 

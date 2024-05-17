@@ -19,7 +19,7 @@ NOTE: assumes the `_ARRAY_DIMENSION` convention from `xarray`
 }
 \examples{
 
-z <- open_zarr(z_dir())
+z <- open_zarr(z_demo())
 
 inq_dim(z, 0)
 

@@ -23,7 +23,7 @@ Get Zarr Attribute
 }
 \examples{
 
-z <- open_zarr(z_dir())
+z <- open_zarr(z_demo())
 
 get_att(z, -1, 2)
 
