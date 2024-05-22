@@ -30,9 +30,9 @@ inq_var <- function(z, var) {
 
   all_dims <- get_unique_dims(z)
 
-  dim_ids <- which(get_all_dims(z, v$var_name)[[1]]$name == all_dims) - 1
+  dim_ids <- rm_na(match(get_all_dims(z, v$var_name)[[1]]$name, all_dims)) - 1
 
-  num_atts <- length(get_attributes(z, v$var_name))
+  num_atts <- length(get_attributes(z, v$var_name, noarray = TRUE))
 
   list(id = v$var,
        name = v$var_name,

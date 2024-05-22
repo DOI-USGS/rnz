@@ -1,6 +1,6 @@
-z <- z_demo()
-
 test_that("open example", {
+  z <- z_demo()
+
   bcsd <- open_zarr(z)
 
   expect_equal(class(bcsd), c("ZarrGroup", "R6"))
@@ -12,12 +12,12 @@ test_that("open example", {
   expect_equal(class(bcsd), c("ZarrGroup", "R6"))
 })
 
-vcr::use_cassette("open_http", {
-  test_that("open http", {
-    url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
+test_that("open http", {
+  skip_if_offline(host = "https://raw.githubusercontent.com")
 
-    z <- open_zarr(url)
+  url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
-    expect_equal(class(z), c("ZarrGroup", "R6"))
-  })
+  z <- rnz::open_zarr(url)
+
+  expect_equal(class(z), c("ZarrGroup", "R6"))
 })

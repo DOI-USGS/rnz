@@ -33,7 +33,11 @@ inq_dim <- function(z, dim) {
 
   dim_name <- array_dims[(dim + 1)]
 
-  rep_var_len <- get_array_dims(z$get_item(get_rep_var(z, dim_name)))$length
+  rep_var <- get_rep_var(z, dim_name)
+
+  rep_var_len <- get_array_dims(z$get_item(rep_var))
+
+  rep_var_len <- rep_var_len$length[which(rep_var_len$name == dim_name)]
 
   list(id = dim,
        name = dim_name,

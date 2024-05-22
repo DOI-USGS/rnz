@@ -105,7 +105,7 @@ get_rep_var <- function(z, dim_name) {
     return(all_var_dims[names(all_var_dims) == dim_name][[1]]$name)
 
   # otherwise return the first variable on that dimension
-  all_var_dims[sapply(all_var_dims, \(x) any(grepl(dim_name, x)))][1][[1]]$name
+  names(all_var_dims[sapply(all_var_dims, \(x) any(grepl(dim_name, x)))][1])
 }
 
 get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
@@ -155,3 +155,7 @@ var_prep <- function(z, var) {
 
   return(list(var = var, var_name = var_name))
 }
+
+z_seq <- function(x) seq_len(x) - 1
+
+rm_na <- function(x) x[!is.na(x)]

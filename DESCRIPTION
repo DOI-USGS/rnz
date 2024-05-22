@@ -14,8 +14,7 @@ Suggests:
     knitr,
     rmarkdown,
     RNetCDF,
-    testthat (>= 3.0.0),
-    vcr (>= 0.6.0)
+    testthat (>= 3.0.0)
 Remotes: dblodgett-usgs/pizzarr
 License: CC0
 Config/testthat/parallel: true
