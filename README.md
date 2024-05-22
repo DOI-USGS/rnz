@@ -9,7 +9,10 @@ of functions that wrap the
 
 ``` r
 
-z <- rnz::z_demo()
+z <- rnz::z_demo() # to use a directory store
+
+# to use an http store
+z <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
 bcsd <- rnz::open_zarr(z)
 
@@ -23,7 +26,7 @@ rnz::inq_store(bcsd) |> str()
 #>  $ ndims : int 3
 #>  $ nvars : int 5
 #>  $ ngatts: int 30
-#>  $ format: chr "DirectoryStore"
+#>  $ format: chr "HttpStore"
 
 rnz::inq_grp(bcsd) |> str() # only the root group supported
 #> List of 6

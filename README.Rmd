@@ -19,17 +19,14 @@ This is a work in progress package aiming to provide an RNetCDF-like set of func
 
 ```{r demo}
 
-z <- rnz::z_demo()
+z <- rnz::z_demo() # to use a directory store
 
-z <- "https://usgs.osn.mghpcc.org/mdmf/gdp/hawaii_present.zarr"
-
-bcsd <- pizzarr::HttpStore$new(z)
+# to use an http store
+z <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
 bcsd <- rnz::open_zarr(z)
 
 class(bcsd)
-
-bcsd <- pizzarr::zarr_open_group(bcsd)
 
 # TODO: implement a nc_dump print-like method to print CDL for a zarr object
 

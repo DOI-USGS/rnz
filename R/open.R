@@ -1,7 +1,7 @@
 #' @title open zarr
 #' @param store a pizzarr store or path to a zarr store
 #' @return ZarrGroup
-#' @importFrom pizzarr zarr_open
+#' @importFrom pizzarr zarr_open HttpStore
 #' @export
 #' @examples
 #' z <- z_demo()
@@ -26,5 +26,9 @@
 #' }
 #'
 open_zarr <- function(store) {
-  invisible(pizzarr::zarr_open(store, mode = 'r'))
+  ret <- try(pizzarr::zarr_open(store, mode = 'r'))
+
+  if(inherits(ret, "try-error")) warning("Failed to open store")
+
+  invisible(ret)
 }
