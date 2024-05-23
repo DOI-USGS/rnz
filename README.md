@@ -19,8 +19,6 @@ bcsd <- rnz::open_zarr(z)
 class(bcsd)
 #> [1] "ZarrGroup" "R6"
 
-# TODO: implement a nc_dump print-like method to print CDL for a zarr object
-
 rnz::inq_store(bcsd) |> str()
 #> List of 4
 #>  $ ndims : int 3
