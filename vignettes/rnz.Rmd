@@ -44,12 +44,15 @@ A NetCDF and Zarr copy of the dataset are included.
 
 ```{r}
 
+# these files are in `z_demo()` as a file store
+# and via "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/" as an http store.
 gsub(normalizePath(dirname(rnz::z_demo())), "",
      list.files(rnz::z_demo(), recursive = TRUE, all.files = TRUE), 
      fixed = TRUE)
 
-#TODO: get a print.zarr function going like print.nc
 (z <- rnz::open_zarr(rnz::z_demo()))
+
+cat(c(capture.output(rnz::zdump(rnz::z_demo()))[1:25], "..."), sep = "\n")
 
 nc_file <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 
