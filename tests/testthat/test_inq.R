@@ -1,4 +1,6 @@
-test_that("inq store", {
+test_that("inq", {
+  skip_if_not_installed("pizzarr")
+
   z <- open_zarr(z_demo())
 
   expect_error(inq_store(z_demo), "z must be a zarr group")
@@ -9,10 +11,6 @@ test_that("inq store", {
                     ngatts = 30L,
                     format = "DirectoryStore"))
 
-})
-
-test_that("inq grp", {
-
   z <- open_zarr(z_demo())
 
   expect_equal(inq_grp(z),
@@ -22,9 +20,7 @@ test_that("inq grp", {
                     dimids = c(0, 1, 2),
                     varids = c(0, 1, 2, 3, 4),
                     ngatts = 30L))
-})
 
-test_that("inq dim", {
   z <- open_zarr(z_demo())
 
   expect_equal(inq_dim(z, 0),
@@ -32,10 +28,7 @@ test_that("inq dim", {
 
   expect_equal(inq_dim(z, 0),
                inq_dim(z, "latitude"))
-})
 
-
-test_that("inq var", {
   z <- open_zarr(z_demo())
 
   expect_equal(inq_var(z, "pr"),
@@ -46,10 +39,7 @@ test_that("inq var", {
                inq_var(z, 2))
 
   expect_error(inq_var(z, c(1,2)))
-})
 
-
-test_that("inq att", {
   z <- open_zarr(z_demo())
 
   expect_equal(inq_att(z, "pr", "units"),
@@ -67,11 +57,7 @@ test_that("inq att", {
                inq_att(z, "global", "Conventions"))
 
   expect_error(inq_att(z, "pr", "br"), "attribute not found")
-})
 
-
-
-test_that("inq dim when no coord var", {
   # inspiration
   # "https://usgs.osn.mghpcc.org/mdmf/gdp/hawaii_present.zarr"
 

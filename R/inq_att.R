@@ -28,6 +28,8 @@
 #'
 inq_att <- function(z, var, att) {
 
+  if(is.null(z)) return(NULL)
+
   a <- att_prep(z, var, att)
 
   list(id = a$att,

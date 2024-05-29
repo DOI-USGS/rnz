@@ -16,6 +16,8 @@ ZarrGroup
 open zarr
 }
 \examples{
+if(requireNamespace("pizzarr", quietly = TRUE)) {
+
 z <- z_demo()
 
 bcsd <- open_zarr(z)
@@ -29,6 +31,8 @@ class(zarr)
 bcsd <- open_zarr(zarr)
 
 class(bcsd)
+
+}
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {

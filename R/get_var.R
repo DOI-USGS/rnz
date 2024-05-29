@@ -9,10 +9,10 @@
 #' Specifies the size of the returned array along the dimension in question. Can not
 #' be NA if start is not NA. -1 can be used to indicate all of a given dimension.
 #' @return array of data
-#' @importFrom pizzarr slice
 #' @export
 #' @examples
 #'
+#' if(requireNamespace("pizzarr", quietly = TRUE)) {
 #' z <- open_zarr(z_demo())
 #'
 #' latitude <- get_var(z, 0)
@@ -33,6 +33,8 @@
 #'
 #' dim(pr)
 #'
+#' }
+#'
 #' # equivalent data in NetCDF
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
@@ -41,6 +43,10 @@
 #' }
 #'
 get_var <- function(z, var, start = NA, count = NA) {
+
+  if(!check_pizzarr()) return(NULL)
+
+  if(is.null(z)) return(NULL)
 
   v <- var_prep(z, var)
 
@@ -58,7 +64,7 @@ get_var <- function(z, var, start = NA, count = NA) {
 
   slice_list <- lapply(seq_along(dim_size), \(i) {
     if(count[i] == -1) count[i] <- dim_size[i]
-    slice(start[i], (start[i] + count[i] - 1))
+    pizzarr::slice(start[i], (start[i] + count[i] - 1))
   })
 
   z$get_item(v$var_name)$get_item(slice_list)$as.array()

@@ -15,7 +15,7 @@ vignette: >
 </style>
 
 ```{r setup, include = FALSE}
-eval <-  requireNamespace("RNetCDF", quietly = TRUE)
+eval <-  requireNamespace("RNetCDF", quietly = TRUE) & requireNamespace("pizzarr", quietly = TRUE)
 
 knitr::opts_chunk$set(
   collapse = TRUE,

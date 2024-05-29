@@ -1,3 +1,13 @@
+check_pizzarr <- function() {
+  if(!requireNamespace("pizzarr", quietly = TRUE)) {
+    warning("pizzarr package is required")
+
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
+}
+
 
 #' Zarr demo data directory
 #' unzips and returns a demo Zarr store directory.

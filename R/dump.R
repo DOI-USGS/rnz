@@ -20,6 +20,8 @@ zdump <- function(store) {
     try(open_zarr(store))
   }
 
+  if(is.null(store)) return(NULL)
+
   if(inherits(store, "try-error")) {
     warning("could't interpret store input as a zarr store")
     return(invisible(NULL))

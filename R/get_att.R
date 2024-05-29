@@ -24,6 +24,8 @@
 #'
 get_att <- function(z, var, att) {
 
+  if(is.null(z)) return(NULL)
+
   a <- att_prep(z, var, att)
 
   a$atts[[a$att + 1]]

@@ -1,4 +1,6 @@
 test_that("open example", {
+  skip_if_not_installed("pizzarr")
+
   z <- z_demo()
 
   bcsd <- open_zarr(z)
@@ -13,6 +15,8 @@ test_that("open example", {
 })
 
 test_that("open http", {
+  skip_if_not_installed("pizzarr")
+
   skip_if_offline(host = "https://raw.githubusercontent.com")
 
   url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"

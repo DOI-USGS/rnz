@@ -22,6 +22,8 @@
 #'
 inq_var <- function(z, var) {
 
+  if(is.null(z)) return(NULL)
+
   v <- var_prep(z, var)
 
   num_dim <- z$get_item(v$var_name)$get_ndim()

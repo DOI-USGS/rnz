@@ -1,6 +1,8 @@
-z <- open_zarr(z_demo())
-
 test_that("utils", {
+
+  skip_if_not_installed("pizzarr")
+
+  z <- open_zarr(z_demo())
 
   expect_equal(get_all_dims(z),
                list(
@@ -39,14 +41,10 @@ test_that("utils", {
                  units = "degrees_north"
                ))
 
-})
-
-test_that("get_coord_vars", {
   expect_equal(get_coord_vars(z),
                c("latitude", "longitude", "time"))
-})
 
-test_that("get_dim_size", {
+
   expect_equal(get_dim_size(z),
                list(
                  latitude = list(name = "latitude", length = 33L),
@@ -55,41 +53,29 @@ test_that("get_dim_size", {
                  tas = list(name = c("time", "latitude", "longitude"), length = c(12L, 33L, 81L)),
                  time = list(name = "time", length = 12L)
                ))
-})
 
-test_that("get_rep_var", {
   expect_equal(get_rep_var(z, "latitude"),
                "latitude")
-})
 
-test_that("get_unique_dims", {
   expect_equal(get_unique_dims(z),
                c("latitude", "longitude", "time"))
-})
 
-test_that("get_vars", {
   expect_equal(get_vars(z),
                c("latitude", "longitude", "pr", "tas", "time"))
-})
 
-test_that("is_zarr", {
   expect_true(is_zarr(z))
-  expect_error(is_zarr(""))
-})
 
-test_that("nodots", {
+  expect_error(is_zarr(""))
+
   expect_equal(nodots(z$get_store()$listdir()),
                c("latitude", "longitude", "pr", "tas", "time"))
-})
 
-test_that("var_char_to_id", {
   expect_equal(var_char_to_id(z, "pr"), 2)
 
   expect_error(var_char_to_id(z, "br"), "variable not found")
-})
 
-test_that("att_char_to_id", {
   expect_equal(att_char_to_id(z, "pr", "units"), 3)
 
   expect_equal(att_char_to_id(z, 2, "units"), 3)
+
 })

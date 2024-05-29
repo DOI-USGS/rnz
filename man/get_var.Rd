@@ -27,6 +27,7 @@ Get Zarr Variable
 }
 \examples{
 
+if(requireNamespace("pizzarr", quietly = TRUE)) {
 z <- open_zarr(z_demo())
 
 latitude <- get_var(z, 0)
@@ -46,6 +47,8 @@ dim(pr)
 pr <- get_var(z, "pr", start = c(1, 1, 1), count = c(5, 5, -1))
 
 dim(pr)
+
+}
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {

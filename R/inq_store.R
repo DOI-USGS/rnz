@@ -17,6 +17,8 @@
 #'
 inq_store <- function(z) {
 
+  if(is.null(z)) return(NULL)
+
   is_zarr(z)
 
   vars <- nodots(z$get_store()$listdir())
