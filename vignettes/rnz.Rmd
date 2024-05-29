@@ -71,7 +71,7 @@ We can do all the normal inquire stuff using 0-indexed ids or names.
 ```{r}
 RNetCDF::file.inq.nc(nc)
 
-rnz::inq_store(z)
+rnz::inq_nz_source(z)
 ```
 
 ### Inquire about a group

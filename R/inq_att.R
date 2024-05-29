@@ -1,6 +1,6 @@
 #' @title Inquire Zarr Attribute
 #'
-#' @inheritParams inq_store
+#' @inheritParams inq_nz_source
 #' @param var integer or character zero-based index id of variable of interest
 #' or name of variable of interest. -1 or "global" for global attributes
 #' @param att integer or character zero-based index id of attribute of interest
@@ -25,7 +25,7 @@
 #'
 #'   (RNetCDF::att.inq.nc(RNetCDF::open.nc(nc), 0, 0))
 #' }
-#'
+#' @name inq_att
 inq_att <- function(z, var, att) {
 
   if(is.null(z)) return(NULL)

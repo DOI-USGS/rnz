@@ -18,7 +18,7 @@
 #'
 #'   (RNetCDF::grp.inq.nc(RNetCDF::open.nc(nc)))
 #' }
-#'
+#' @name inq_grp
 inq_grp <- function(z, group = "/") {
 
   if(is.null(z)) return(NULL)

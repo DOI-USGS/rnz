@@ -19,7 +19,7 @@ bcsd <- rnz::open_nz(z)
 class(bcsd)
 #> [1] "ZarrGroup" "R6"
 
-rnz::inq_store(bcsd) |> str()
+rnz::inq_nz_source(bcsd) |> str()
 #> List of 4
 #>  $ ndims : int 3
 #>  $ nvars : int 5

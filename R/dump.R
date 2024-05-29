@@ -9,7 +9,7 @@
 #' store <- rnz::z_demo()
 #'
 #' zdump(store)
-#'
+#' @name zdump
 zdump <- function(store) {
 
   store <- if(inherits(store, "ZarrGroup")) {
@@ -27,7 +27,7 @@ zdump <- function(store) {
     return(invisible(NULL))
   }
 
-  istore <- inq_store(store)
+  istore <- inq_nz_source(store)
 
   dims <- vapply(z_seq(istore$ndims), \(i) {
     d <- inq_dim(store, i)

@@ -3,9 +3,9 @@ test_that("inq", {
 
   z <- open_nz(z_demo())
 
-  expect_error(inq_store(z_demo), "z must be a zarr group")
+  expect_error(inq_nz_source(z_demo), "z must be a zarr group")
 
-  expect_equal(inq_store(z),
+  expect_equal(inq_nz_source(z),
                list(ndims = 3L,
                     nvars = 5L,
                     ngatts = 30L,
@@ -81,7 +81,7 @@ test_that("inq", {
   r$get_item("j")$get_attrs()$set_item("_ARRAY_DIMENSIONS", list("x", "y"))
   r$get_item("t")$get_attrs()$set_item("_ARRAY_DIMENSIONS", list("t"))
 
-  expect_equal(inq_store(r), list(ndims = 3L, nvars = 4L, ngatts = 0L, format = "MemoryStore"))
+  expect_equal(inq_nz_source(r), list(ndims = 3L, nvars = 4L, ngatts = 0L, format = "MemoryStore"))
 
   expect_equal(inq_dim(r, 0), list(id = 0, name = "x", length = 2))
 

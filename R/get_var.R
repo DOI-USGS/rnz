@@ -1,6 +1,6 @@
 #' @title Get Zarr Variable
 #'
-#' @inheritParams inq_store
+#' @inheritParams inq_nz_source
 #' @param var integer or character zero-based index id of variable of interest
 #' or name of variable of interest.
 #' @param start integer vector with length equal to the number of dimensions of var.
@@ -41,7 +41,7 @@
 #'
 #'   (RNetCDF::var.get.nc(RNetCDF::open.nc(nc), 0))
 #' }
-#'
+#' @name get_var
 get_var <- function(z, var, start = NA, count = NA) {
 
   if(!check_pizzarr()) return(NULL)

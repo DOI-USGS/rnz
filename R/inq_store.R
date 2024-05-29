@@ -6,7 +6,7 @@
 #'
 #' z <- open_nz(z_demo())
 #'
-#' inq_store(z)
+#' inq_nz_source(z)
 #'
 #' # equivalent data in NetCDF
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
@@ -14,8 +14,8 @@
 #'
 #'   (RNetCDF::file.inq.nc(RNetCDF::open.nc(nc)))
 #' }
-#'
-inq_store <- function(z) {
+#' @name inq_nz_source
+inq_nz_source <- function(z) {
 
   if(is.null(z)) return(NULL)
 

@@ -30,7 +30,7 @@ class(bcsd)
 
 if(!is.null(bcsd)) {
 
-rnz::inq_store(bcsd) |> str()
+rnz::inq_nz_source(bcsd) |> str()
 
 rnz::inq_grp(bcsd) |> str() # only the root group supported
 

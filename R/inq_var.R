@@ -1,6 +1,6 @@
 #' @title Inquire Zarr Variable
 #'
-#' @inheritParams inq_store
+#' @inheritParams inq_nz_source
 #' @param var integer or character zero-based index id of variable of interest
 #' or name of variable of interest.
 #' @return list similar to that returned by \link[RNetCDF]{var.inq.nc}
@@ -19,7 +19,7 @@
 #'
 #'   (RNetCDF::var.inq.nc(RNetCDF::open.nc(nc), 0))
 #' }
-#'
+#' @name inq_var
 inq_var <- function(z, var) {
 
   if(is.null(z)) return(NULL)

@@ -2,7 +2,7 @@
 #' @description
 #' NOTE: assumes the `_ARRAY_DIMENSION` convention from `xarray`
 #'
-#' @inheritParams inq_store
+#' @inheritParams inq_nz_source
 #' @param dim integer zero-based index id of dimension of interest
 #' @return list similar to that returned by \link[RNetCDF]{dim.inq.nc}
 #' @export
@@ -20,7 +20,7 @@
 #'
 #'   (RNetCDF::dim.inq.nc(RNetCDF::open.nc(nc), 0))
 #' }
-#'
+#' @name inq_dim
 inq_dim <- function(z, dim) {
 
   if(is.null(z)) return(NULL)

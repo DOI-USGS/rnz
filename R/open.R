@@ -27,7 +27,7 @@
 #'
 #'   (RNetCDF::open.nc(nc))
 #' }
-#'
+#' @name open_nz
 open_nz <- function(store) {
   if(!check_pizzarr()) return(NULL)
 

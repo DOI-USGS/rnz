@@ -21,7 +21,7 @@
 #'
 #'   (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
 #' }
-#'
+#' @name get_att
 get_att <- function(z, var, att) {
 
   if(is.null(z)) return(NULL)
