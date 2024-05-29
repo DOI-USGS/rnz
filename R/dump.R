@@ -2,51 +2,70 @@
 #' @description
 #' Prints an ncdump-like output to the console.
 #'
-#' @param store path to store, open zarr store, or open zarr group
+#' @param nz path to store, open zarr store, or open zarr group
 #' @return a list of lines printed to the console invisibly
 #' @export
 #' @examples
 #' store <- rnz::z_demo()
 #'
 #' nzdump(store)
+#'
+#' nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+#'
+#' nzdump(nz)
+#'
 #' @name nzdump
-nzdump <- function(store) {
+#' @export
+nzdump <- function(nz) {
+  if(is.null(nz)) return(NULL)
 
-  store <- if(inherits(store, "ZarrGroup")) {
-    store
-  } else if(is.character(store)) {
-    open_nz(store)
-  } else {
-    try(open_nz(store))
-  }
+  UseMethod("nzdump")
+}
 
-  if(is.null(store)) return(NULL)
+#' @name nzdump
+#' @export
+nzdump.character <- function(nz) {
 
-  if(inherits(store, "try-error")) {
-    warning("could't interpret store input as a zarr store")
+  nz <- open_nz(nz)
+
+  if(inherits(nz, "try-error")) {
+    warning("could't interpret nz input as a zarr store or NetCDF resource")
     return(invisible(NULL))
   }
 
-  istore <- inq_nz_source(store)
+  nzdump(nz)
+}
 
-  dims <- vapply(z_seq(istore$ndims), \(i) {
-    d <- inq_dim(store, i)
+#' @name nzdump
+#' @export
+nzdump.NetCDF <- function(nz) {
+  return(invisible(RNetCDF::print.nc(nz)))
+}
+
+#' @name nzdump
+#' @export
+nzdump.ZarrGroup <- function(nz) {
+
+  inz <- inq_nz_source(nz)
+
+  dims <- vapply(z_seq(inz$ndims), \(i) {
+    d <- inq_dim(nz, i)
     paste0(d$name, " = ", d$length, " ;")
   }, "")
 
-  vars <- lapply(z_seq(istore$nvars), \(i) {
-    v <- inq_var(store, i)
+  vars <- lapply(z_seq(inz$nvars), \(i) {
+    v <- inq_var(nz, i)
 
-    dim_names <- vapply(v$dimids, \(d) inq_dim(store, d)$name, "")
+    dim_names <- vapply(v$dimids, \(d) inq_dim(nz, d)$name, "")
 
-    v$atts <- lapply(z_seq(v$natts), \(i) get_att(store, v$id, i))
+    v$atts <- lapply(z_seq(v$natts), \(i) get_att(nz, v$id, i))
 
-    names(v$atts) <- vapply(z_seq(v$natts), \(i) inq_att(store, v$id, i)$name, "")
+    names(v$atts) <- vapply(z_seq(v$natts), \(i) inq_att(nz, v$id, i)$name, "")
 
     c(paste0("\t", v$type, " ", v$name, "(", paste(dim_names, collapse = ", "), ") ;"),
       vapply(z_seq(v$natts), \(i) {
-        aname <- inq_att(store, v$id, i)$name
-        aval <- get_att(store, v$id, i)
+        aname <- inq_att(nz, v$id, i)$name
+        aval <- get_att(nz, v$id, i)
         paste0("\t\t", v$name, ":", aname, " = ", aval, " ;")
       }, ""))
 
@@ -54,9 +73,9 @@ nzdump <- function(store) {
 
   vars <- unlist(vars)
 
-  gatts <- vapply(z_seq(istore$ngatts), \(i) {
-    aname <- inq_att(store, -1, i)$name
-    aval <- get_att(store, -1, i)
+  gatts <- vapply(z_seq(inz$ngatts), \(i) {
+    aname <- inq_att(nz, -1, i)$name
+    aval <- get_att(nz, -1, i)
     paste0("\t\t", ":", aname, " = ", paste(aval, collapse = ", "), " ;")
   }, "")
 

@@ -7,7 +7,7 @@
 inq_dim(z, dim)
 }
 \arguments{
-\item{z}{an open ZarrGroup as returned by \link{open_zarr}}
+\item{z}{an open ZarrGroup as returned by \link{open_nz}}
 
 \item{dim}{integer zero-based index id of dimension of interest}
 }
@@ -19,7 +19,7 @@ NOTE: assumes the `_ARRAY_DIMENSION` convention from `xarray`
 }
 \examples{
 
-z <- open_zarr(z_demo())
+z <- open_nz(z_demo())
 
 inq_dim(z, 0)
 
@@ -31,5 +31,4 @@ if(requireNamespace("RNetCDF", quietly = TRUE)) {
 
   (RNetCDF::dim.inq.nc(RNetCDF::open.nc(nc), 0))
 }
-
 }

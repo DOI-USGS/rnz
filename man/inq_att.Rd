@@ -7,7 +7,7 @@
 inq_att(z, var, att)
 }
 \arguments{
-\item{z}{an open ZarrGroup as returned by \link{open_zarr}}
+\item{z}{an open ZarrGroup as returned by \link{open_nz}}
 
 \item{var}{integer or character zero-based index id of variable of interest
 or name of variable of interest. -1 or "global" for global attributes}
@@ -23,7 +23,7 @@ Inquire Zarr Attribute
 }
 \examples{
 
-z <- open_zarr(z_demo())
+z <- open_nz(z_demo())
 
 inq_att(z, -1, 0)
 
@@ -39,5 +39,4 @@ if(requireNamespace("RNetCDF", quietly = TRUE)) {
 
   (RNetCDF::att.inq.nc(RNetCDF::open.nc(nc), 0, 0))
 }
-
 }

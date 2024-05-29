@@ -7,7 +7,7 @@
 get_var(z, var, start = NA, count = NA)
 }
 \arguments{
-\item{z}{an open ZarrGroup as returned by \link{open_zarr}}
+\item{z}{an open ZarrGroup as returned by \link{open_nz}}
 
 \item{var}{integer or character zero-based index id of variable of interest
 or name of variable of interest.}
@@ -28,7 +28,7 @@ Get Zarr Variable
 \examples{
 
 if(requireNamespace("pizzarr", quietly = TRUE)) {
-z <- open_zarr(z_demo())
+z <- open_nz(z_demo())
 
 latitude <- get_var(z, 0)
 
@@ -56,5 +56,4 @@ if(requireNamespace("RNetCDF", quietly = TRUE)) {
 
   (RNetCDF::var.get.nc(RNetCDF::open.nc(nc), 0))
 }
-
 }

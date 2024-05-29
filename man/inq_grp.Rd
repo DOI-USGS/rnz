@@ -7,7 +7,7 @@
 inq_grp(z, group = "/")
 }
 \arguments{
-\item{z}{an open ZarrGroup as returned by \link{open_zarr}}
+\item{z}{an open ZarrGroup as returned by \link{open_nz}}
 
 \item{group}{NOTUSED}
 }
@@ -19,7 +19,7 @@ NOTE: only functions on a root group thus far
 }
 \examples{
 
-z <- open_zarr(z_demo())
+z <- open_nz(z_demo())
 
 inq_grp(z)
 
@@ -29,5 +29,4 @@ if(requireNamespace("RNetCDF", quietly = TRUE)) {
 
   (RNetCDF::grp.inq.nc(RNetCDF::open.nc(nc)))
 }
-
 }
