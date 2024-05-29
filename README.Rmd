@@ -49,7 +49,7 @@ rnz::get_var(bcsd, "latitude") |> str()
 rnz::get_att(bcsd, 0, 5)
 rnz::get_att(bcsd, "time", "units")
 
-rnz::zdump(bcsd)
+rnz::nzdump(bcsd)
 
 }
 

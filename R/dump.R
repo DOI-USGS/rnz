@@ -8,9 +8,9 @@
 #' @examples
 #' store <- rnz::z_demo()
 #'
-#' zdump(store)
-#' @name zdump
-zdump <- function(store) {
+#' nzdump(store)
+#' @name nzdump
+nzdump <- function(store) {
 
   store <- if(inherits(store, "ZarrGroup")) {
     store

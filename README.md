@@ -86,7 +86,7 @@ rnz::get_att(bcsd, 0, 5)
 rnz::get_att(bcsd, "time", "units")
 #> [1] "days since 1950-01-01"
 
-rnz::zdump(bcsd)
+rnz::nzdump(bcsd)
 #> zarr {
 #> dimensions:
 #> latitude = 33 ;

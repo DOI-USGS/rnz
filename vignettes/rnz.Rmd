@@ -52,7 +52,7 @@ gsub(normalizePath(dirname(rnz::z_demo())), "",
 
 (z <- rnz::open_nz(rnz::z_demo()))
 
-cat(c(capture.output(rnz::zdump(rnz::z_demo()))[1:25], "..."), sep = "\n")
+cat(c(capture.output(rnz::nzdump(rnz::z_demo()))[1:25], "..."), sep = "\n")
 
 nc_file <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
 

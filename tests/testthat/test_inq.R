@@ -97,7 +97,7 @@ test_that("inq", {
 
   expect_equal(inq_var(r, 3)$dimids, c(2))
 
-  out <- zdump(r)
+  out <- nzdump(r)
 
   expect_equal(out,
                c("zarr {", "dimensions:", "x = 2 ;", "y = 3 ;", "t = 5 ;", "variables:",
