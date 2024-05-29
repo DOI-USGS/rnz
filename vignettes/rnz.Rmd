@@ -50,7 +50,7 @@ gsub(normalizePath(dirname(rnz::z_demo())), "",
      list.files(rnz::z_demo(), recursive = TRUE, all.files = TRUE), 
      fixed = TRUE)
 
-(z <- rnz::open_zarr(rnz::z_demo()))
+(z <- rnz::open_nz(rnz::z_demo()))
 
 cat(c(capture.output(rnz::zdump(rnz::z_demo()))[1:25], "..."), sep = "\n")
 

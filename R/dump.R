@@ -15,9 +15,9 @@ zdump <- function(store) {
   store <- if(inherits(store, "ZarrGroup")) {
     store
   } else if(is.character(store)) {
-    open_zarr(store)
+    open_nz(store)
   } else {
-    try(open_zarr(store))
+    try(open_nz(store))
   }
 
   if(is.null(store)) return(NULL)

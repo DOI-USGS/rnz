@@ -1,7 +1,7 @@
 test_that("inq", {
   skip_if_not_installed("pizzarr")
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_error(inq_store(z_demo), "z must be a zarr group")
 
@@ -11,7 +11,7 @@ test_that("inq", {
                     ngatts = 30L,
                     format = "DirectoryStore"))
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(inq_grp(z),
                list(grps = list(),
@@ -21,7 +21,7 @@ test_that("inq", {
                     varids = c(0, 1, 2, 3, 4),
                     ngatts = 30L))
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(inq_dim(z, 0),
                list(id = 0, name = "latitude", length = 33L))
@@ -29,7 +29,7 @@ test_that("inq", {
   expect_equal(inq_dim(z, 0),
                inq_dim(z, "latitude"))
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(inq_var(z, "pr"),
                list(id = 2, name = "pr", type = "<f4",
@@ -40,7 +40,7 @@ test_that("inq", {
 
   expect_error(inq_var(z, c(1,2)))
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(inq_att(z, "pr", "units"),
                list(id = 3, name = "units", type = "character", length = 1L))

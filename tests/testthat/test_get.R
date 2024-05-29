@@ -1,7 +1,7 @@
 test_that("get_att", {
   skip_if_not_installed("pizzarr")
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(
     get_att(z, -1, 2),
@@ -22,7 +22,7 @@ test_that("get_att", {
 test_that("get_var", {
   skip_if_not_installed("pizzarr")
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   latitude <- get_var(z, 0)
 

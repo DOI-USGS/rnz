@@ -1,13 +1,13 @@
-#' @title open zarr
-#' @param store a pizzarr store or path to a zarr store
-#' @return ZarrGroup
+#' @title open netcdf or zarr
+#' @param store a pizzarr store, a path to a zarr store, or a path to a netcdf resource
+#' @return ZarrGroup or NetCDF object
 #' @export
 #' @examples
 #' if(requireNamespace("pizzarr", quietly = TRUE)) {
 #'
 #' z <- z_demo()
 #'
-#' bcsd <- open_zarr(z)
+#' bcsd <- open_nz(z)
 #'
 #' class(bcsd)
 #'
@@ -15,7 +15,7 @@
 #'
 #' class(zarr)
 #'
-#' bcsd <- open_zarr(zarr)
+#' bcsd <- open_nz(zarr)
 #'
 #' class(bcsd)
 #'
@@ -28,7 +28,7 @@
 #'   (RNetCDF::open.nc(nc))
 #' }
 #'
-open_zarr <- function(store) {
+open_nz <- function(store) {
   if(!check_pizzarr()) return(NULL)
 
   ret <- try(pizzarr::zarr_open(store, mode = 'r'))

@@ -14,7 +14,7 @@ z <- rnz::z_demo() # to use a directory store
 # to use an http store
 z <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
-bcsd <- rnz::open_zarr(z)
+bcsd <- rnz::open_nz(z)
 
 class(bcsd)
 #> [1] "ZarrGroup" "R6"

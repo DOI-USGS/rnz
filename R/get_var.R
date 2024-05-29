@@ -13,7 +13,7 @@
 #' @examples
 #'
 #' if(requireNamespace("pizzarr", quietly = TRUE)) {
-#' z <- open_zarr(z_demo())
+#' z <- open_nz(z_demo())
 #'
 #' latitude <- get_var(z, 0)
 #'

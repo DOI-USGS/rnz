@@ -1,10 +1,10 @@
 #' @title Inquire Zarr Store
-#' @param z an open ZarrGroup as returned by \link{open_zarr}
+#' @param z an open ZarrGroup as returned by \link{open_nz}
 #' @return list similar to that returned by \link[RNetCDF]{file.inq.nc}
 #' @export
 #' @examples
 #'
-#' z <- open_zarr(z_demo())
+#' z <- open_nz(z_demo())
 #'
 #' inq_store(z)
 #'

@@ -2,7 +2,7 @@ test_that("utils", {
 
   skip_if_not_installed("pizzarr")
 
-  z <- open_zarr(z_demo())
+  z <- open_nz(z_demo())
 
   expect_equal(get_all_dims(z),
                list(
