@@ -5,7 +5,6 @@
 #' @inheritParams inq_nz_source
 #' @param dim integer zero-based index id of dimension of interest
 #' @return list similar to that returned by \link[RNetCDF]{dim.inq.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -18,10 +17,29 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (RNetCDF::dim.inq.nc(RNetCDF::open.nc(nc), 0))
+#'   (inq_dim(RNetCDF::open.nc(nc), 0))
 #' }
 #' @name inq_dim
+#' @export
 inq_dim <- function(z, dim) {
+  UseMethod("inq_dim")
+}
+
+#' @name inq_dim
+#' @export
+inq_dim.character <- function(z, dim) {
+  inq_dim(open_nz(z, warn = FALSE), dim)
+}
+
+#' @name inq_dim
+#' @export
+inq_dim.NetCDF <- function(z, dim) {
+  RNetCDF::dim.inq.nc(z, dim)
+}
+
+#' @name inq_dim
+#' @export
+inq_dim.ZarrGroup <- function(z, dim) {
 
   if(is.null(z)) return(NULL)
 

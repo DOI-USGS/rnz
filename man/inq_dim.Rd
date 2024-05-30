@@ -2,9 +2,18 @@
 % Please edit documentation in R/inq_dim.R
 \name{inq_dim}
 \alias{inq_dim}
+\alias{inq_dim.character}
+\alias{inq_dim.NetCDF}
+\alias{inq_dim.ZarrGroup}
 \title{Inquire Zarr Dimension}
 \usage{
 inq_dim(z, dim)
+
+\method{inq_dim}{character}(z, dim)
+
+\method{inq_dim}{NetCDF}(z, dim)
+
+\method{inq_dim}{ZarrGroup}(z, dim)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -29,6 +38,6 @@ inq_dim(z, "latitude")
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (RNetCDF::dim.inq.nc(RNetCDF::open.nc(nc), 0))
+  (inq_dim(RNetCDF::open.nc(nc), 0))
 }
 }

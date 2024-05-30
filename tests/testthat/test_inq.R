@@ -114,4 +114,8 @@ test_that("inq netcdf", {
 
   expect_equal(inq[2:5],
                inq_grp(z)[1:4])
+
+  inq <- inq_dim(nc, 0)
+
+  expect_equal(inq, inq_dim(nc_file, 0))
 })
