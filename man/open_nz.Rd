@@ -6,11 +6,11 @@
 \alias{open_nz.character}
 \title{open netcdf or zarr}
 \usage{
-open_nz(nz, backend = NULL)
+open_nz(nz, backend = NULL, warn = TRUE)
 
-\method{open_nz}{Store}(nz, backend = NULL)
+\method{open_nz}{Store}(nz, backend = NULL, warn = TRUE)
 
-\method{open_nz}{character}(nz, backend = NULL)
+\method{open_nz}{character}(nz, backend = NULL, warn = TRUE)
 }
 \arguments{
 \item{nz}{a pizzarr store, a path to a zarr store, or a path to a netcdf resource}
@@ -45,8 +45,10 @@ class(bcsd)
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+  nc <- z_demo(format = "netcdf")
 
-  open_nz(nc)
+  bcsd <- open_nz(nc)
+
+  class(bcsd)
 }
 }

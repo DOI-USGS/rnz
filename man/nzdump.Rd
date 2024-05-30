@@ -28,4 +28,9 @@ Prints an ncdump-like output to the console.
 store <- rnz::z_demo()
 
 nzdump(store)
+
+nc <- z_demo(format = "netcdf")
+
+nzdump(nz)
+
 }

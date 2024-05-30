@@ -24,7 +24,7 @@
 #'
 #' # equivalent data in NetCDF
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
-#'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+#'   nc <- z_demo(format = "netcdf")
 #'
 #'   bcsd <- open_nz(nc)
 #'
@@ -32,45 +32,45 @@
 #' }
 #' @name open_nz
 #' @export
-open_nz <- function(nz, backend = NULL) {
+open_nz <- function(nz, backend = NULL, warn = TRUE) {
   UseMethod("open_nz")
 }
 
-try_zarr <- function(nz) {
+try_zarr <- function(nz, warn) {
   if(!check_pizzarr()) return(NULL)
 
   ret <- try(pizzarr::zarr_open(nz, mode = 'r'), silent = TRUE)
 
-  if(inherits(ret, "try-error")) warning("Failed to open as zarr")
+  if(warn & inherits(ret, "try-error")) warning("Failed to open as zarr", immediate. = TRUE)
 
   ret
 }
 
 #' @name open_nz
 #' @export
-open_nz.Store <- function(nz, backend = NULL) {
+open_nz.Store <- function(nz, backend = NULL, warn = TRUE) {
 
-  ret <- try_zarr(nz)
+  ret <- try_zarr(nz, warn)
 
   invisible(ret)
 }
 
 #' @name open_nz
 #' @export
-open_nz.character <- function(nz, backend = NULL) {
+open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
 
   if(!is.null(backend) && !backend %in% c("pizzarr", "RNetCDF")) stop("'backend' must be NULL, \"pizzarr\", or \"RNetCDF\"")
 
   ret <- NULL
 
   if(is.null(backend) || backend == "pizzarr") {
-    ret <- try_zarr(nz)
+    ret <- try_zarr(nz, warn)
   }
 
   if(!is.null(backend) && backend == "RNetCDF" | inherits(ret, "try-error")) {
     ret <- try(RNetCDF::open.nc(nz))
 
-    if(!inherits(ret, "try-error") & !is.null(backend) && backend != "RNetCDF") message("Opened as NetCDF")
+    if(!inherits(ret, "try-error") & is.null(backend)) message("Opened as NetCDF")
   }
 
   invisible(ret)

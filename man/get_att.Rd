@@ -35,7 +35,7 @@ get_att(z, "latitude", "long_name")
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+  nc <- z_demo(format = "netcdf")
 
   (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
 }

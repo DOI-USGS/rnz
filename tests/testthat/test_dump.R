@@ -5,9 +5,7 @@ test_that("dump", {
 
   expect_true(grepl("zarr", dump[1]))
 
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
-
-  dump <- capture.output(nzdump(nz))
+  dump <- capture.output(nzdump(nc_file))
 
   expect_true(grepl("netcdf", dump[1]))
 })

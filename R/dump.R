@@ -10,7 +10,7 @@
 #'
 #' nzdump(store)
 #'
-#' nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+#' nc <- z_demo(format = "netcdf")
 #'
 #' nzdump(nz)
 #'
@@ -26,7 +26,7 @@ nzdump <- function(nz) {
 #' @export
 nzdump.character <- function(nz) {
 
-  nz <- open_nz(nz)
+  nz <- suppressWarnings(open_nz(nz))
 
   if(inherits(nz, "try-error")) {
     warning("could't interpret nz input as a zarr store or NetCDF resource")

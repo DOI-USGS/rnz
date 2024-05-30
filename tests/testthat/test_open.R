@@ -1,13 +1,15 @@
 test_that("open example", {
   skip_if_not_installed("pizzarr")
 
-  z <- z_demo()
+  expect_error(z_demo("bork"))
 
-  bcsd <- open_nz(z, backend = "pizzarr")
+  expect_error(open_nz(z_path, backend = "bork"))
+
+  bcsd <- open_nz(z_path, backend = "pizzarr")
 
   expect_equal(class(bcsd), c("ZarrGroup", "R6"))
 
-  zarr <- pizzarr::DirectoryStore$new(z)
+  zarr <- pizzarr::DirectoryStore$new(z_path)
 
   bcsd <- open_nz(zarr)
 
@@ -29,12 +31,10 @@ test_that("open http", {
 test_that("open netcdf", {
   skip_if_not_installed("RNetCDF")
 
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
-
-  expect_warning(bcsd <- open_nz(nc), "Failed to open as zarr")
+  expect_message(expect_warning(bcsd <- open_nz(nc_file), "Failed to open as zarr"), "Opened as NetCDF")
 
   expect_equal(class(bcsd), "NetCDF")
 
-  expect_silent(open_nz(nc, backend = "RNetCDF"))
+  expect_silent(open_nz(nc_file, backend = "RNetCDF"))
 
 })

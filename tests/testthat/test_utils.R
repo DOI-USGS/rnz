@@ -2,8 +2,6 @@ test_that("utils", {
 
   skip_if_not_installed("pizzarr")
 
-  z <- open_nz(z_demo())
-
   expect_equal(get_all_dims(z),
                list(
                  latitude = list(name = "latitude"),
