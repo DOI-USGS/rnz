@@ -9,7 +9,6 @@
 #' Specifies the size of the returned array along the dimension in question. Can not
 #' be NA if start is not NA. -1 can be used to indicate all of a given dimension.
 #' @return array of data
-#' @export
 #' @examples
 #'
 #' if(requireNamespace("pizzarr", quietly = TRUE)) {
@@ -20,7 +19,10 @@
 #' class(latitude)
 #' dim(latitude)
 #'
-#' pr <- get_var(z, "pr")
+#' pr <- get_var(z, "pr") |>
+#'   aperm(c(3,2,1))
+#'
+#' pr[pr > 1000] <- NA
 #'
 #' image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
 #'       useRaster = TRUE, axes = FALSE)
@@ -39,14 +41,38 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (RNetCDF::var.get.nc(RNetCDF::open.nc(nc), 0))
+#'   (get_var(RNetCDF::open.nc(nc), 0))
+#'
+#'   pr <- get_var(nc, "pr")
+#'
+#'   image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
+#'         useRaster = TRUE, axes = FALSE)
+#'
 #' }
+#'
 #' @name get_var
+#' @export
 get_var <- function(z, var, start = NA, count = NA) {
+  UseMethod("get_var")
+}
+
+#' @name get_var
+#' @export
+get_var.character <- function(z, var, start = NA, count = NA) {
+  get_var(open_nz(z, warn = FALSE), var, start, count)
+}
+
+#' @name get_var
+#' @export
+get_var.NetCDF <- function(z, var, start = NA, count = NA) {
+  RNetCDF::var.get.nc(z, var, start, count, collapse = FALSE)
+}
+
+#' @name get_var
+#' @export
+get_var.ZarrGroup <- function(z, var, start = NA, count = NA) {
 
   if(!check_pizzarr()) return(NULL)
-
-  if(is.null(z)) return(NULL)
 
   v <- var_prep(z, var)
 
@@ -69,4 +95,10 @@ get_var <- function(z, var, start = NA, count = NA) {
 
   z$get_item(v$var_name)$get_item(slice_list)$as.array()
 
+}
+
+#' @name get_var
+#' @export
+get_var.NULL <- function(z, var, start = NA, count = NA) {
+  NULL
 }

@@ -46,7 +46,9 @@ get_att(z, "latitude", "long_name")
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
+  (get_att(RNetCDF::open.nc(nc), 0, 0))
+
+  (get_att(RNetCDF::open.nc(nc), "global", 1))
 }
 
 }

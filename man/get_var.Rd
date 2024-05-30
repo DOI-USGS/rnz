@@ -2,9 +2,21 @@
 % Please edit documentation in R/get_var.R
 \name{get_var}
 \alias{get_var}
+\alias{get_var.character}
+\alias{get_var.NetCDF}
+\alias{get_var.ZarrGroup}
+\alias{get_var.NULL}
 \title{Get Zarr Variable}
 \usage{
 get_var(z, var, start = NA, count = NA)
+
+\method{get_var}{character}(z, var, start = NA, count = NA)
+
+\method{get_var}{NetCDF}(z, var, start = NA, count = NA)
+
+\method{get_var}{ZarrGroup}(z, var, start = NA, count = NA)
+
+\method{get_var}{`NULL`}(z, var, start = NA, count = NA)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -35,7 +47,10 @@ latitude <- get_var(z, 0)
 class(latitude)
 dim(latitude)
 
-pr <- get_var(z, "pr")
+pr <- get_var(z, "pr") |>
+  aperm(c(3,2,1))
+
+pr[pr > 1000] <- NA
 
 image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
       useRaster = TRUE, axes = FALSE)
@@ -54,6 +69,13 @@ dim(pr)
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (RNetCDF::var.get.nc(RNetCDF::open.nc(nc), 0))
+  (get_var(RNetCDF::open.nc(nc), 0))
+
+  pr <- get_var(nc, "pr")
+
+  image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
+        useRaster = TRUE, axes = FALSE)
+
 }
+
 }
