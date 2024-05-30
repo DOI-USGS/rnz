@@ -54,7 +54,7 @@ gsub(normalizePath(dirname(rnz::z_demo())), "",
 
 cat(c(capture.output(rnz::nzdump(rnz::z_demo()))[1:25], "..."), sep = "\n")
 
-nc_file <- z_demo(format = "netcdf")
+nc_file <- rnz::z_demo(format = "netcdf")
 
 (nc <- RNetCDF::open.nc(nc_file))
 

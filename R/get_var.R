@@ -41,7 +41,7 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (get_var(RNetCDF::open.nc(nc), 0))
+#'   (get_var(nc, 0))
 #'
 #'   pr <- get_var(nc, "pr")
 #'

@@ -34,6 +34,6 @@ inq_nz_source(z)
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (inq_nz_source(RNetCDF::open.nc(nc)))
+  (inq_nz_source(nc))
 }
 }

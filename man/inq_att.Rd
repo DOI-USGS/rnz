@@ -46,6 +46,6 @@ inq_att(z, "latitude", "long_name")
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (inq_att(RNetCDF::open.nc(nc), 0, 0))
+  (inq_att(nc, 0, 0))
 }
 }

@@ -22,7 +22,7 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (inq_att(RNetCDF::open.nc(nc), 0, 0))
+#'   (inq_att(nc, 0, 0))
 #' }
 #' @name inq_att
 #' @export

@@ -12,7 +12,7 @@
 #'
 #' nc <- z_demo(format = "netcdf")
 #'
-#' nzdump(nz)
+#' nzdump(nc)
 #'
 #' @name nzdump
 #' @export
@@ -26,7 +26,7 @@ nzdump <- function(nz) {
 #' @export
 nzdump.character <- function(nz) {
 
-  nz <- suppressWarnings(open_nz(nz))
+  nz <- open_nz(nz, warn = FALSE)
 
   if(inherits(nz, "try-error")) {
     warning("could't interpret nz input as a zarr store or NetCDF resource")

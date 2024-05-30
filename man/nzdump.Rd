@@ -31,6 +31,6 @@ nzdump(store)
 
 nc <- z_demo(format = "netcdf")
 
-nzdump(nz)
+nzdump(nc)
 
 }

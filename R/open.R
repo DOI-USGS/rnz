@@ -2,6 +2,7 @@
 #' @param nz a pizzarr store, a path to a zarr store, or a path to a netcdf resource
 #' @param backend character "pizzarr" or "RNetCDF"
 #'  if NULL (the default) will try pizzar first and fall back to RNetCDF
+#' @param warn logical warn or no warn?
 #' @return ZarrGroup or NetCDF object
 #' @examples
 #' if(requireNamespace("pizzarr", quietly = TRUE)) {
@@ -70,7 +71,10 @@ open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
   if(!is.null(backend) && backend == "RNetCDF" | inherits(ret, "try-error")) {
     ret <- try(RNetCDF::open.nc(nz))
 
-    if(!inherits(ret, "try-error") & is.null(backend) & warn) message("Opened as NetCDF")
+    if(!inherits(ret, "try-error") & is.null(backend) & warn) {
+      message("Opened as NetCDF")
+      on.exit(RNetCDF::close.nc(ret), add = TRUE)
+    }
   }
 
   invisible(ret)

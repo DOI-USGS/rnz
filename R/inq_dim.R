@@ -17,7 +17,7 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (inq_dim(RNetCDF::open.nc(nc), 0))
+#'   (inq_dim(nc, 0))
 #' }
 #' @name inq_dim
 #' @export

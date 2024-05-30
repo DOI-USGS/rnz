@@ -18,9 +18,9 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (get_att(RNetCDF::open.nc(nc), 0, 0))
+#'   (get_att(nc, 0, 0))
 #'
-#'   (get_att(RNetCDF::open.nc(nc), "global", 1))
+#'   (get_att(nc, "global", 1))
 #' }
 #'
 #' @name get_att

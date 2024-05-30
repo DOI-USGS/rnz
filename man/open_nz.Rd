@@ -17,6 +17,8 @@ open_nz(nz, backend = NULL, warn = TRUE)
 
 \item{backend}{character "pizzarr" or "RNetCDF"
 if NULL (the default) will try pizzar first and fall back to RNetCDF}
+
+\item{warn}{logical warn or no warn?}
 }
 \value{
 ZarrGroup or NetCDF object
