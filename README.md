@@ -3,6 +3,8 @@
 
 # `rnz` R NetCDF Zarr
 
+# rnz <img src="man/figures/logo.png" align="right" height="139" alt="" />
+
 [![codecov](https://codecov.io/github/dblodgett-usgs/rnz/graph/badge.svg?token=8DZJ7RYIOJ)](https://codecov.io/github/dblodgett-usgs/rnz)
 
 This is a work in progress package aiming to provide an RNetCDF-like set
