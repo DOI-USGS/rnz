@@ -2,9 +2,18 @@
 % Please edit documentation in R/inq_grp.R
 \name{inq_grp}
 \alias{inq_grp}
+\alias{inq_grp.character}
+\alias{inq_grp.NetCDF}
+\alias{inq_grp.ZarrGroup}
 \title{Inquire Zarr Group}
 \usage{
 inq_grp(z, group = "/")
+
+\method{inq_grp}{character}(z, group = "/")
+
+\method{inq_grp}{NetCDF}(z, group = "/")
+
+\method{inq_grp}{ZarrGroup}(z, group = "/")
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -24,9 +33,7 @@ z <- open_nz(z_demo())
 inq_grp(z)
 
 # equivalent data in NetCDF
-if(requireNamespace("RNetCDF", quietly = TRUE)) {
-  nc <- z_demo(format = "netcdf")
-
-  (RNetCDF::grp.inq.nc(RNetCDF::open.nc(nc)))
+if(requireNamespace("RNetCDF", quietly = TRUE)) {#'
+  inq_grp(z_demo(format = "netcdf"))
 }
 }

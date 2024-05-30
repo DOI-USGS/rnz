@@ -103,11 +103,15 @@ test_that("inq netcdf", {
 
   inq <- inq_nz_source(nc)
 
-  inq_z <-
-
   expect_equal(inq, inq_nz_source(nc_file))
 
   expect_equal(inq[1:3],
                inq_nz_source(z)[1:3])
 
+  inq <- inq_grp(nc)
+
+  expect_equal(inq[2:9], inq_grp(nc_file)[2:9])
+
+  expect_equal(inq[2:5],
+               inq_grp(z)[1:4])
 })

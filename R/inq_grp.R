@@ -5,7 +5,6 @@
 #' @param z an open ZarrGroup as returned by \link{open_nz}
 #' @param group NOTUSED
 #' @return list similar to that returned by \link[RNetCDF]{grp.inq.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -13,13 +12,31 @@
 #' inq_grp(z)
 #'
 #' # equivalent data in NetCDF
-#' if(requireNamespace("RNetCDF", quietly = TRUE)) {
-#'   nc <- z_demo(format = "netcdf")
-#'
-#'   (RNetCDF::grp.inq.nc(RNetCDF::open.nc(nc)))
+#' if(requireNamespace("RNetCDF", quietly = TRUE)) {#'
+#'   inq_grp(z_demo(format = "netcdf"))
 #' }
 #' @name inq_grp
+#' @export
 inq_grp <- function(z, group = "/") {
+  UseMethod("inq_grp")
+}
+
+#' @name inq_grp
+#' @export
+inq_grp.character <- function(z, group = "/") {
+  inq_grp(open_nz(z, warn = FALSE), group)
+}
+
+#' @name inq_grp
+#' @export
+inq_grp.NetCDF <- function(z, group = "/") {
+  RNetCDF::grp.inq.nc(z)
+}
+
+
+#' @name inq_grp
+#' @export
+inq_grp.ZarrGroup <- function(z, group = "/") {
 
   if(is.null(z)) return(NULL)
 
