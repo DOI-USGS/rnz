@@ -8,3 +8,4 @@ LICENSE.md
 ^docs$
 ^pkgdown$
 inst/extdata/bcsd.zarr
+.github

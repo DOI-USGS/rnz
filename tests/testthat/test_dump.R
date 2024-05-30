@@ -11,5 +11,5 @@ test_that("dump", {
 
   expect_null(nzdump(NULL))
 
-  expect_warning(nzdump("borked"), "could't interpret")
+  expect_warning(nzdump("/borked"), "could't interpret")
 })
