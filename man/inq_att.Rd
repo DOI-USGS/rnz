@@ -4,6 +4,7 @@
 \alias{inq_att}
 \alias{inq_att.character}
 \alias{inq_att.NetCDF}
+\alias{inq_att.NULL}
 \alias{inq_att.ZarrGroup}
 \title{Inquire Zarr Attribute}
 \usage{
@@ -12,6 +13,8 @@ inq_att(z, var, att)
 \method{inq_att}{character}(z, var, att)
 
 \method{inq_att}{NetCDF}(z, var, att)
+
+\method{inq_att}{`NULL`}(z, var, att)
 
 \method{inq_att}{ZarrGroup}(z, var, att)
 }

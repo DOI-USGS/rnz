@@ -14,6 +14,8 @@ test_that("open example", {
   bcsd <- open_nz(zarr)
 
   expect_equal(class(bcsd), c("ZarrGroup", "R6"))
+
+  expect_null(open_nz(NULL))
 })
 
 test_that("open http", {

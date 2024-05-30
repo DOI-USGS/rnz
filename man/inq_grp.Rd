@@ -5,6 +5,7 @@
 \alias{inq_grp.character}
 \alias{inq_grp.NetCDF}
 \alias{inq_grp.ZarrGroup}
+\alias{inq_grp.NULL}
 \title{Inquire Zarr Group}
 \usage{
 inq_grp(z, group = "/")
@@ -14,6 +15,8 @@ inq_grp(z, group = "/")
 \method{inq_grp}{NetCDF}(z, group = "/")
 
 \method{inq_grp}{ZarrGroup}(z, group = "/")
+
+\method{inq_grp}{`NULL`}(z, group = "/")
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}

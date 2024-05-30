@@ -4,6 +4,7 @@
 \alias{nzdump}
 \alias{nzdump.character}
 \alias{nzdump.NetCDF}
+\alias{nzdump.NULL}
 \alias{nzdump.ZarrGroup}
 \title{Dump zarr like ncdump}
 \usage{
@@ -12,6 +13,8 @@ nzdump(nz)
 \method{nzdump}{character}(nz)
 
 \method{nzdump}{NetCDF}(nz)
+
+\method{nzdump}{`NULL`}(nz)
 
 \method{nzdump}{ZarrGroup}(nz)
 }

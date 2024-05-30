@@ -5,6 +5,7 @@
 \alias{inq_var.character}
 \alias{inq_var.NetCDF}
 \alias{inq_var.ZarrGroup}
+\alias{inq_var.NULL}
 \title{Inquire Zarr Variable}
 \usage{
 inq_var(z, var)
@@ -14,6 +15,8 @@ inq_var(z, var)
 \method{inq_var}{NetCDF}(z, var)
 
 \method{inq_var}{ZarrGroup}(z, var)
+
+\method{inq_var}{`NULL`}(z, var)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}

@@ -72,8 +72,6 @@ get_var.NetCDF <- function(z, var, start = NA, count = NA) {
 #' @export
 get_var.ZarrGroup <- function(z, var, start = NA, count = NA) {
 
-  if(!check_pizzarr()) return(NULL)
-
   v <- var_prep(z, var)
 
   if(is.na(start)[1])

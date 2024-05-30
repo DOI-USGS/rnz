@@ -40,8 +40,6 @@ inq_var.NetCDF <- function(z, var) {
 #' @export
 inq_var.ZarrGroup <- function(z, var) {
 
-  if(is.null(z)) return(NULL)
-
   v <- var_prep(z, var)
 
   num_dim <- z$get_item(v$var_name)$get_ndim()
@@ -63,6 +61,11 @@ inq_var.ZarrGroup <- function(z, var) {
 
 }
 
+#' @name inq_var
+#' @export
+inq_var.NULL <- function(z, var) {
+  NULL
+}
 
 var_char_to_id <- function(z, char_var) {
   out <- which(get_vars(z) == char_var) - 1 # 0 indexed
@@ -71,3 +74,5 @@ var_char_to_id <- function(z, char_var) {
 
   out
 }
+
+

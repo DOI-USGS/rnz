@@ -38,8 +38,6 @@ inq_grp.NetCDF <- function(z, group = "/") {
 #' @export
 inq_grp.ZarrGroup <- function(z, group = "/") {
 
-  if(is.null(z)) return(NULL)
-
   array_dims <- get_unique_dims(z)
   vars <- get_vars(z)
 
@@ -50,4 +48,10 @@ inq_grp.ZarrGroup <- function(z, group = "/") {
        varids = seq(0, by = 1, length.out = length(vars)),
        ngatts = length(z$get_attrs()$to_list()))
 
+}
+
+#' @name inq_grp
+#' @export
+inq_grp.NULL <- function(z, group = "/") {
+  NULL
 }

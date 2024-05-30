@@ -32,8 +32,8 @@ oldoption <- options(scipen = 9999)
 
 # `rnz` R NetCDF Zarr
 
-`rnz` wraps the `pizzarr` package providing very similar set of functions to the 
-`RNetCDF` package. The intent is to allow access to zarr in essentially the same 
+`rnz` wraps the `pizzarr` and `RNetCDF` package providing very similar set of functions to the 
+`RNetCDF` package. The intent is to allow access to NetCDF and zarr in essentially the same 
 way as is done with NetCDF such that packages with a NetCDF backend can easily
 implement an equivalent ZARR back end using base R.
 
@@ -69,18 +69,17 @@ We can do all the normal inquire stuff using 0-indexed ids or names.
 ### Inquire about a store 
 
 ```{r}
-RNetCDF::file.inq.nc(nc)
+rnz::inq_nz_source(nc)
 
 rnz::inq_nz_source(z)
 ```
 
 ### Inquire about a group
 
-TODO: get rnz working with more than root groups
+TODO: get rnz working with more than root groups? 
 
 ```{r}
-
-RNetCDF::grp.inq.nc(nc)
+rnz::inq_grp(nc)
 
 rnz::inq_grp(z)
 
@@ -90,11 +89,11 @@ rnz::inq_grp(z)
 
 ```{r}
 
-RNetCDF::dim.inq.nc(nc, 2)
+rnz::inq_dim(nc, 2)
 
 rnz::inq_dim(z, 2)
 
-RNetCDF::dim.inq.nc(nc, "time")
+rnz::inq_dim(nc, "time")
 
 rnz::inq_dim(z, "time")
 ```
@@ -103,11 +102,11 @@ rnz::inq_dim(z, "time")
 
 ```{r}
 
-RNetCDF::var.inq.nc(nc, 4)
+rnz::inq_var(nc, 4)
 
 rnz::inq_var(z, 4)
 
-RNetCDF::var.inq.nc(nc, "time")
+rnz::inq_var(nc, "time")
 
 rnz::inq_var(z, "time")
 ```
@@ -115,11 +114,11 @@ rnz::inq_var(z, "time")
 ### Inquire about an attribute
 
 ```{r}
-RNetCDF::att.inq.nc(nc, "time", "units")
+rnz::inq_att(nc, "time", "units")
 
 rnz::inq_att(z, "time", "units")
 
-RNetCDF::att.inq.nc(nc, 4, 1)
+rnz::inq_att(nc, 4, 3)
 
 rnz::inq_att(z, 4, 3)
 ```
@@ -127,16 +126,17 @@ rnz::inq_att(z, 4, 3)
 
 ```{r}
 
-RNetCDF::var.get.nc(nc, "time")
+rnz::get_var(nc, "time")
 
 rnz::get_var(z, "time")
 
-RNetCDF::var.get.nc(nc, variable = "pr", 
-                    start = c(1,1,5), count = c(3,3,1))
+rnz::get_var(nc, var = "pr", 
+             start = c(1,1,5), count = c(3,3,1))
 
 rnz::get_var(z, var = "pr", 
              start = c(1,1,5), count = c(3,3,1))
 
+# TODO: figure out why aperm #3
 pr <- rnz::get_var(z, "pr") |>
   aperm(c(3,2,1))
 
@@ -148,7 +148,7 @@ image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
 ```
 
 ```{r}
-pr <- RNetCDF::var.get.nc(nc, "pr")
+pr <- rnz::get_var(nc, "pr")
 
 image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
       useRaster = TRUE, axes = FALSE)
@@ -157,11 +157,11 @@ image(pr[,,1], col = hcl.colors(12, "PuBuGn", rev = TRUE),
 ### Get an attribute
 
 ```{r}
-RNetCDF::att.get.nc(nc, "time", "units")
+rnz::get_att(nc, "time", "units")
 
 rnz::get_att(z, "time", "units")
 
-RNetCDF::att.get.nc(nc, 4, 1)
+rnz::get_att(nc, 4, 1)
 
 rnz::get_att(z, 4, 3)
 ```

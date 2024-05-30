@@ -5,6 +5,7 @@
 \alias{get_att.character}
 \alias{get_att.NetCDF}
 \alias{get_att.ZarrGroup}
+\alias{get_att.NULL}
 \title{Get Zarr Attribute}
 \usage{
 get_att(z, var, att)
@@ -14,6 +15,8 @@ get_att(z, var, att)
 \method{get_att}{NetCDF}(z, var, att)
 
 \method{get_att}{ZarrGroup}(z, var, att)
+
+\method{get_att}{`NULL`}(z, var, att)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}

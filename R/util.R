@@ -1,15 +1,7 @@
-check_pizzarr <- function() {
-  if(!requireNamespace("pizzarr", quietly = TRUE)) {
-    warning("pizzarr package is required")
-
-    return(FALSE)
-  } else {
-    return(TRUE)
-  }
-}
-
-
 #' nz demo data directory
+#'
+#' Data derived from: https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/
+#'
 #' @param format character "netcdf" or "zarr"
 #' @return netcdf sample data or unzips and returns a demo Zarr store directory
 #' @export

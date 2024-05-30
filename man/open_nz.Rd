@@ -4,6 +4,7 @@
 \alias{open_nz}
 \alias{open_nz.Store}
 \alias{open_nz.character}
+\alias{open_nz.NULL}
 \title{open netcdf or zarr}
 \usage{
 open_nz(nz, backend = NULL, warn = TRUE)
@@ -11,6 +12,8 @@ open_nz(nz, backend = NULL, warn = TRUE)
 \method{open_nz}{Store}(nz, backend = NULL, warn = TRUE)
 
 \method{open_nz}{character}(nz, backend = NULL, warn = TRUE)
+
+\method{open_nz}{`NULL`}(nz, backend = NULL, warn = TRUE)
 }
 \arguments{
 \item{nz}{a pizzarr store, a path to a zarr store, or a path to a netcdf resource}

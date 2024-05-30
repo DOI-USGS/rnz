@@ -24,6 +24,7 @@ test_that("get_att", {
   expect_equal(get_att(nc_file, "global", "Conventions"),
                get_att(z, "global", "Conventions"))
 
+  expect_null(get_att(NULL))
 
 })
 
@@ -42,6 +43,15 @@ test_that("get_var", {
 
   expect_equal(get_var(nc_file, "latitude"),
                get_var(z, "latitude"))
+
+  expect_null(get_var(NULL))
+
+  expect_error(get_var(z, "pr", c(1)), "must specify count")
+
+  expect_error(get_var(z, "pr", c(1, 1), c(1, 1)), "start and count must have length")
+
+  expect_equal(get_var(z, "pr"),
+               get_var(z, "pr", c(1,1,1), c(-1, -1, -1)))
 
   pr_nc <- get_var(nc_file, "pr")
 

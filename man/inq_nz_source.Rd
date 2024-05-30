@@ -4,6 +4,7 @@
 \alias{inq_nz_source}
 \alias{inq_nz_source.character}
 \alias{inq_nz_source.NetCDF}
+\alias{inq_nz_source.NULL}
 \alias{inq_nz_source.ZarrGroup}
 \title{Inquire Zarr Store}
 \usage{
@@ -12,6 +13,8 @@ inq_nz_source(z)
 \method{inq_nz_source}{character}(z)
 
 \method{inq_nz_source}{NetCDF}(z)
+
+\method{inq_nz_source}{`NULL`}(z)
 
 \method{inq_nz_source}{ZarrGroup}(z)
 }

@@ -5,6 +5,7 @@
 \alias{inq_dim.character}
 \alias{inq_dim.NetCDF}
 \alias{inq_dim.ZarrGroup}
+\alias{inq_dim.NULL}
 \title{Inquire Zarr Dimension}
 \usage{
 inq_dim(z, dim)
@@ -14,6 +15,8 @@ inq_dim(z, dim)
 \method{inq_dim}{NetCDF}(z, dim)
 
 \method{inq_dim}{ZarrGroup}(z, dim)
+
+\method{inq_dim}{`NULL`}(z, dim)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}

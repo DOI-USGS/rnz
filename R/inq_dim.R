@@ -41,8 +41,6 @@ inq_dim.NetCDF <- function(z, dim) {
 #' @export
 inq_dim.ZarrGroup <- function(z, dim) {
 
-  if(is.null(z)) return(NULL)
-
   if(is.character(dim)) dim <- dim_char_to_id(z, dim)
 
   stopifnot(is.numeric(dim), length(dim) == 1, as.integer(dim) == dim)
@@ -71,3 +69,8 @@ dim_char_to_id <- function(z, char_dim) {
   out
 }
 
+#' @name inq_dim
+#' @export
+inq_dim.NULL <- function(z, dim) {
+  NULL
+}

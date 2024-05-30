@@ -38,9 +38,7 @@ open_nz <- function(nz, backend = NULL, warn = TRUE) {
 }
 
 try_zarr <- function(nz, warn) {
-  if(!check_pizzarr()) return(NULL)
-
-  ret <- try(pizzarr::zarr_open(nz, mode = 'r'), silent = TRUE)
+    ret <- try(pizzarr::zarr_open(nz, mode = 'r'), silent = TRUE)
 
   if(warn & inherits(ret, "try-error")) warning("Failed to open as zarr", immediate. = TRUE)
 
@@ -78,4 +76,10 @@ open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
   }
 
   invisible(ret)
+}
+
+#' @name open_nz
+#' @export
+open_nz.NULL <- function(nz, backend = NULL, warn = TRUE) {
+  NULL
 }

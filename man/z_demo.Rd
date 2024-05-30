@@ -13,7 +13,7 @@ z_demo(format = "zarr")
 netcdf sample data or unzips and returns a demo Zarr store directory
 }
 \description{
-nz demo data directory
+Data derived from: https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/
 }
 \examples{
 list.files(z_demo(format = "zarr"), recursive = TRUE, all.files = TRUE)

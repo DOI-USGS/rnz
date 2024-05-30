@@ -42,6 +42,11 @@ inq_att.NetCDF <- function(z, var, att) {
   RNetCDF::att.inq.nc(z, var, att)
 }
 
+#' @name inq_att
+#' @export
+inq_att.NULL <- function(z, var, att) {
+  NULL
+}
 
 #' @name inq_att
 #' @export

@@ -48,10 +48,14 @@ get_att.NetCDF <- function(z, var, att) {
 #' @export
 get_att.ZarrGroup <- function(z, var, att) {
 
-  if(is.null(z)) return(NULL)
-
   a <- att_prep(z, var, att)
 
   a$atts[[a$att + 1]]
 
+}
+
+#' @name get_att
+#' @export
+get_att.NULL <- function(z, var, att) {
+  NULL
 }

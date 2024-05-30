@@ -17,8 +17,6 @@
 #' @name nzdump
 #' @export
 nzdump <- function(nz) {
-  if(is.null(nz)) return(NULL)
-
   UseMethod("nzdump")
 }
 
@@ -40,6 +38,12 @@ nzdump.character <- function(nz) {
 #' @export
 nzdump.NetCDF <- function(nz) {
   return(invisible(RNetCDF::print.nc(nz)))
+}
+
+#' @name nzdump
+#' @export
+nzdump.NULL <- function(nz) {
+  NULL
 }
 
 #' @name nzdump

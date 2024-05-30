@@ -33,6 +33,12 @@ inq_nz_source.NetCDF <- function(z) {
 
 #' @name inq_nz_source
 #' @export
+inq_nz_source.NULL <- function(z) {
+  NULL
+}
+
+#' @name inq_nz_source
+#' @export
 inq_nz_source.ZarrGroup <- function(z) {
 
   vars <- nodots(z$get_store()$listdir())

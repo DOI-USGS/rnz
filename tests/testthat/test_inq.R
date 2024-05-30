@@ -1,6 +1,8 @@
 test_that("inq", {
   skip_if_not_installed("pizzarr")
 
+  expect_null(inq_nz_source(NULL))
+
   expect_equal(inq_nz_source(z_path), inq_nz_source(z))
 
   expect_equal(inq_nz_source(z),
@@ -17,11 +19,17 @@ test_that("inq", {
                     varids = c(0, 1, 2, 3, 4),
                     ngatts = 30L))
 
+  expect_null(inq_grp(NULL))
+
   expect_equal(inq_dim(z, 0),
                list(id = 0, name = "latitude", length = 33L))
 
   expect_equal(inq_dim(z, 0),
                inq_dim(z, "latitude"))
+
+  expect_null(inq_dim(NULL))
+
+  expect_error(inq_dim(z, "nope"), "dimension not found")
 
   expect_equal(inq_var(z, "pr"),
                list(id = 2, name = "pr", type = "<f4",
@@ -31,6 +39,8 @@ test_that("inq", {
                inq_var(z, 2))
 
   expect_error(inq_var(z, c(1,2)))
+
+  expect_null(inq_var(NULL))
 
   expect_equal(inq_att(z, "pr", "units"),
                list(id = 3, name = "units", type = "character", length = 1L))
@@ -47,6 +57,8 @@ test_that("inq", {
                inq_att(z, "global", "Conventions"))
 
   expect_error(inq_att(z, "pr", "br"), "attribute not found")
+
+  expect_null(inq_att(NULL))
 
   # inspiration
   # "https://usgs.osn.mghpcc.org/mdmf/gdp/hawaii_present.zarr"
