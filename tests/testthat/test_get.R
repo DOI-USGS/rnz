@@ -15,6 +15,16 @@ test_that("get_att", {
   expect_equal(get_att(z, 0, 3),
                get_att(z, "latitude", "long_name"))
 
+  expect_equal(get_att(nc_file, "latitude", "long_name"),
+               get_att(z, "latitude", "long_name"))
+
+  expect_equal(get_att(nc_file, -1, "Conventions"),
+               get_att(z, -1, "Conventions"))
+
+  expect_equal(get_att(nc_file, "global", "Conventions"),
+               get_att(z, "global", "Conventions"))
+
+
 })
 
 test_that("get_var", {

@@ -2,9 +2,18 @@
 % Please edit documentation in R/get_att.R
 \name{get_att}
 \alias{get_att}
+\alias{get_att.character}
+\alias{get_att.NetCDF}
+\alias{get_att.ZarrGroup}
 \title{Get Zarr Attribute}
 \usage{
 get_att(z, var, att)
+
+\method{get_att}{character}(z, var, att)
+
+\method{get_att}{NetCDF}(z, var, att)
+
+\method{get_att}{ZarrGroup}(z, var, att)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -39,4 +48,5 @@ if(requireNamespace("RNetCDF", quietly = TRUE)) {
 
   (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
 }
+
 }

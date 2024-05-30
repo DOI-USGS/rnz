@@ -2,7 +2,6 @@
 #'
 #' @inheritParams inq_att
 #' @return vector containing requested attribute \link[RNetCDF]{att.get.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -19,10 +18,35 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (RNetCDF::att.get.nc(RNetCDF::open.nc(nc), 0, 0))
+#'   (get_att(RNetCDF::open.nc(nc), 0, 0))
+#'
+#'   (get_att(RNetCDF::open.nc(nc), "global", 1))
 #' }
+#'
 #' @name get_att
+#' @export
 get_att <- function(z, var, att) {
+  UseMethod("get_att")
+}
+
+#' @name get_att
+#' @export
+get_att.character <- function(z, var, att) {
+  get_att(open_nz(z, warn = FALSE), var, att)
+}
+
+#' @name get_att
+#' @export
+get_att.NetCDF <- function(z, var, att) {
+  if(var == "global" | var == -1) var <- "NC_GLOBAL"
+
+  RNetCDF::att.get.nc(z, var, att)
+}
+
+
+#' @name get_att
+#' @export
+get_att.ZarrGroup <- function(z, var, att) {
 
   if(is.null(z)) return(NULL)
 
@@ -30,12 +54,4 @@ get_att <- function(z, var, att) {
 
   a$atts[[a$att + 1]]
 
-}
-
-att_char_to_id <- function(z, var, char_att) {
-  out <- which(names(get_attributes(z, var, noarray = TRUE)) == char_att) - 1 # 0 indexed
-
-  if(length(out) == 0) stop("attribute not found")
-
-  out
 }

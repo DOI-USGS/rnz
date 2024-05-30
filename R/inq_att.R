@@ -6,7 +6,6 @@
 #' @param att integer or character zero-based index id of attribute of interest
 #' or name of attribute of interest.
 #' @return list similar to that returned by \link[RNetCDF]{att.inq.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -23,12 +22,30 @@
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
 #'   nc <- z_demo(format = "netcdf")
 #'
-#'   (RNetCDF::att.inq.nc(RNetCDF::open.nc(nc), 0, 0))
+#'   (inq_att(RNetCDF::open.nc(nc), 0, 0))
 #' }
 #' @name inq_att
+#' @export
 inq_att <- function(z, var, att) {
+ UseMethod("inq_att")
+}
 
-  if(is.null(z)) return(NULL)
+#' @name inq_att
+#' @export
+inq_att.character <- function(z, var, att) {
+  inq_att(open_nz(z, warn = FALSE), var, att)
+}
+
+#' @name inq_att
+#' @export
+inq_att.NetCDF <- function(z, var, att) {
+  RNetCDF::att.inq.nc(z, var, att)
+}
+
+
+#' @name inq_att
+#' @export
+inq_att.ZarrGroup <- function(z, var, att) {
 
   a <- att_prep(z, var, att)
 
@@ -37,12 +54,4 @@ inq_att <- function(z, var, att) {
        type = class(unlist(a$atts[a$att + 1])),
        length = length(a$atts[[a$att + 1]]))
 
-}
-
-att_char_to_id <- function(z, var, char_att) {
-  out <- which(names(get_attributes(z, var, noarray = TRUE)) == char_att) - 1 # 0 indexed
-
-  if(length(out) == 0) stop("attribute not found")
-
-  out
 }

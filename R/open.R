@@ -70,7 +70,7 @@ open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
   if(!is.null(backend) && backend == "RNetCDF" | inherits(ret, "try-error")) {
     ret <- try(RNetCDF::open.nc(nz))
 
-    if(!inherits(ret, "try-error") & is.null(backend)) message("Opened as NetCDF")
+    if(!inherits(ret, "try-error") & is.null(backend) & warn) message("Opened as NetCDF")
   }
 
   invisible(ret)

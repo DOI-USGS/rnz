@@ -126,6 +126,14 @@ get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
   out
 }
 
+att_char_to_id <- function(z, var, char_att) {
+  out <- which(names(get_attributes(z, var, noarray = TRUE)) == char_att) - 1 # 0 indexed
+
+  if(length(out) == 0) stop("attribute not found")
+
+  out
+}
+
 att_prep <- function(z, var, att) {
   if(var == "global") var <- -1
 

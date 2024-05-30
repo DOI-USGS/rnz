@@ -129,4 +129,14 @@ test_that("inq netcdf", {
 
   expect_equal(inq[c(1:2, 4:6)],
                inq_var(z, "latitude")[c(1:2, 4:6)])
+
+  inq <- inq_att(nc, 0, 0)
+
+  expect_equal(inq, inq_att(nc_file, 0, 0))
+
+  expect_equal(inq, inq_att(nc_file, "latitude", "standard_name"))
+
+  # TODO get more inq_att to match up?
+  expect_equal(inq[c(2)],
+               inq_att(z, "latitude", "standard_name")[c(2)])
 })

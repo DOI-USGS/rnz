@@ -2,9 +2,18 @@
 % Please edit documentation in R/inq_att.R
 \name{inq_att}
 \alias{inq_att}
+\alias{inq_att.character}
+\alias{inq_att.NetCDF}
+\alias{inq_att.ZarrGroup}
 \title{Inquire Zarr Attribute}
 \usage{
 inq_att(z, var, att)
+
+\method{inq_att}{character}(z, var, att)
+
+\method{inq_att}{NetCDF}(z, var, att)
+
+\method{inq_att}{ZarrGroup}(z, var, att)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -37,6 +46,6 @@ inq_att(z, "latitude", "long_name")
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
   nc <- z_demo(format = "netcdf")
 
-  (RNetCDF::att.inq.nc(RNetCDF::open.nc(nc), 0, 0))
+  (inq_att(RNetCDF::open.nc(nc), 0, 0))
 }
 }
