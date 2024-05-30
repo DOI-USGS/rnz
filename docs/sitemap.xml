@@ -22,6 +22,9 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/news/index.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_att.html</loc>
   </url>
   <url>
@@ -40,10 +43,19 @@
     <loc>/reference/inq_grp.html</loc>
   </url>
   <url>
+    <loc>/reference/inq_nz_source.html</loc>
+  </url>
+  <url>
     <loc>/reference/inq_store.html</loc>
   </url>
   <url>
     <loc>/reference/inq_var.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nzdump.html</loc>
+  </url>
+  <url>
+    <loc>/reference/open_nz.html</loc>
   </url>
   <url>
     <loc>/reference/open_zarr.html</loc>
