@@ -2,9 +2,18 @@
 % Please edit documentation in R/inq_var.R
 \name{inq_var}
 \alias{inq_var}
+\alias{inq_var.character}
+\alias{inq_var.NetCDF}
+\alias{inq_var.ZarrGroup}
 \title{Inquire Zarr Variable}
 \usage{
 inq_var(z, var)
+
+\method{inq_var}{character}(z, var)
+
+\method{inq_var}{NetCDF}(z, var)
+
+\method{inq_var}{ZarrGroup}(z, var)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -28,8 +37,8 @@ inq_var(z, "pr")
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
-
-  (RNetCDF::var.inq.nc(RNetCDF::open.nc(nc), 0))
+  nc <- z_demo(format = "netcdf")
+  nc <- rnz::open_nz(nc, backend = "RNetCDF")
+  inq_var(nc, 0)
 }
 }

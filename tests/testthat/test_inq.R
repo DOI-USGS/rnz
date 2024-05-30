@@ -117,5 +117,16 @@ test_that("inq netcdf", {
 
   inq <- inq_dim(nc, 0)
 
-  expect_equal(inq, inq_dim(nc_file, 0))
+  expect_equal(inq, inq_dim(nc_file, "latitude"))
+
+  expect_equal(inq[1:3], inq_dim(z, "latitude")[1:3])
+
+  inq <- inq_var(nc, 0)
+
+  expect_equal(inq, inq_var(nc_file, 0))
+
+  expect_equal(inq, inq_var(nc_file, "latitude"))
+
+  expect_equal(inq[c(1:2, 4:6)],
+               inq_var(z, "latitude")[c(1:2, 4:6)])
 })

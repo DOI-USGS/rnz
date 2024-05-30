@@ -4,7 +4,6 @@
 #' @param var integer or character zero-based index id of variable of interest
 #' or name of variable of interest.
 #' @return list similar to that returned by \link[RNetCDF]{var.inq.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -15,12 +14,31 @@
 #'
 #' # equivalent data in NetCDF
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
-#'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
-#'
-#'   (RNetCDF::var.inq.nc(RNetCDF::open.nc(nc), 0))
+#'   nc <- z_demo(format = "netcdf")
+#'   nc <- rnz::open_nz(nc, backend = "RNetCDF")
+#'   inq_var(nc, 0)
 #' }
 #' @name inq_var
+#' @export
 inq_var <- function(z, var) {
+  UseMethod("inq_var")
+}
+
+#' @name inq_var
+#' @export
+inq_var.character <- function(z, var) {
+  inq_var(open_nz(z, warn = FALSE), var)
+}
+
+#' @name inq_var
+#' @export
+inq_var.NetCDF <- function(z, var) {
+  RNetCDF::var.inq.nc(z, var)
+}
+
+#' @name inq_var
+#' @export
+inq_var.ZarrGroup <- function(z, var) {
 
   if(is.null(z)) return(NULL)
 
