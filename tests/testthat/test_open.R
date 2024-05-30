@@ -21,8 +21,6 @@ test_that("open example", {
 test_that("open http", {
   skip_if_not_installed("pizzarr")
 
-  skip_if_offline(host = "raw.githubusercontent.com")
-
   url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
   z <- rnz::open_nz(url)
