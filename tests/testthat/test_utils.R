@@ -61,10 +61,6 @@ test_that("utils", {
   expect_equal(get_vars(z),
                c("latitude", "longitude", "pr", "tas", "time"))
 
-  expect_true(is_zarr(z))
-
-  expect_error(is_zarr(""))
-
   expect_equal(nodots(z$get_store()$listdir()),
                c("latitude", "longitude", "pr", "tas", "time"))
 

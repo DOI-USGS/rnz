@@ -39,12 +39,6 @@ nodots <- function(x) {
   x[!grepl("\\.zattrs|\\.zgroup|\\.zmetadata", x)]
 }
 
-# using this to validate all over the place
-is_zarr <- function(z) {
-  if(!inherits(z, "ZarrGroup")) stop("z must be a zarr group")
-  invisible(TRUE)
-}
-
 # pull out the `_ARRAY_DIMENSIONS` xarray convention
 get_array_dims <- function(x, include_size = TRUE) {
   stopifnot(inherits(x, "ZarrArray"))
@@ -64,15 +58,12 @@ get_array_dims <- function(x, include_size = TRUE) {
 # this is used as a proxy for the order in which
 # the dimensions are declared.
 get_unique_dims <- function(z, vars = get_vars(z)) {
-  is_zarr(z)
 
   unique(unlist(get_all_dims(z, vars)))
 }
 
 # gets all array dimensions for provided vars
 get_all_dims <- function(z, vars = get_vars(z)) {
-  is_zarr(z)
-
   out <- lapply(vars, \(x) get_array_dims(z$get_item(x), include_size = FALSE))
 
   names(out) <- vars
@@ -81,8 +72,6 @@ get_all_dims <- function(z, vars = get_vars(z)) {
 }
 
 get_dim_size <- function(z, vars = get_vars(z)) {
-
-  is_zarr(z)
 
   out <- lapply(vars, \(x) get_array_dims(z$get_item(x), include_size = TRUE))
 
@@ -94,15 +83,11 @@ get_dim_size <- function(z, vars = get_vars(z)) {
 
 # just pull out all the variables from the root group.
 get_vars <- function(z) {
-  is_zarr(z)
-
   nodots(z$get_store()$listdir())
 }
 
 # only return variables that are not the same name as a dimension
 get_coord_vars <- function(z, vars = get_vars(z)) {
-  is_zarr(z)
-
   dims <- get_unique_dims(z)
 
   vars[vars %in% dims]
@@ -111,8 +96,6 @@ get_coord_vars <- function(z, vars = get_vars(z)) {
 # gets a representative variable for a given dimension name
 # will return the coordinate variable if it exists
 get_rep_var <- function(z, dim_name) {
-  is_zarr(z)
-
   stopifnot(is.character(dim_name), dim_name %in% get_unique_dims(z))
 
   all_var_dims <- get_all_dims(z)
@@ -144,8 +127,6 @@ get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
 }
 
 att_prep <- function(z, var, att) {
-  is_zarr(z)
-
   if(var == "global") var <- -1
 
   if(is.character(var)) var <- var_char_to_id(z, var)
@@ -162,8 +143,6 @@ att_prep <- function(z, var, att) {
 
 
 var_prep <- function(z, var) {
-  is_zarr(z)
-
   if(is.character(var)) var <- var_char_to_id(z, var)
 
   stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)

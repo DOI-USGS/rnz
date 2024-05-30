@@ -25,8 +25,6 @@ inq_dim <- function(z, dim) {
 
   if(is.null(z)) return(NULL)
 
-  is_zarr(z)
-
   if(is.character(dim)) dim <- dim_char_to_id(z, dim)
 
   stopifnot(is.numeric(dim), length(dim) == 1, as.integer(dim) == dim)

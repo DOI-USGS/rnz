@@ -23,8 +23,6 @@ inq_grp <- function(z, group = "/") {
 
   if(is.null(z)) return(NULL)
 
-  is_zarr(z)
-
   array_dims <- get_unique_dims(z)
   vars <- get_vars(z)
 

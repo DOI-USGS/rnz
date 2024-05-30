@@ -35,10 +35,6 @@ inq_nz_source.NetCDF <- function(z) {
 #' @export
 inq_nz_source.ZarrGroup <- function(z) {
 
-  if(is.null(z)) return(NULL)
-
-  is_zarr(z)
-
   vars <- nodots(z$get_store()$listdir())
 
   list(ndims = max(sapply(vars, \(x) z$get_item(x)$get_ndim())),
