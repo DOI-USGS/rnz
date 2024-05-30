@@ -15,6 +15,8 @@
 
 # `rnz` R NetCDF Zarr
 
+[![codecov](https://codecov.io/github/dblodgett-usgs/rnz/graph/badge.svg?token=8DZJ7RYIOJ)](https://codecov.io/github/dblodgett-usgs/rnz)
+
 This is a work in progress package aiming to provide an RNetCDF-like set of functions that wrap the [`pizzarr`](https://github.com/keller-mark/pizzarr) package.
 
 ```{r demo}

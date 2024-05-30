@@ -3,6 +3,8 @@
 
 # `rnz` R NetCDF Zarr
 
+[![codecov](https://codecov.io/github/dblodgett-usgs/rnz/graph/badge.svg?token=8DZJ7RYIOJ)](https://codecov.io/github/dblodgett-usgs/rnz)
+
 This is a work in progress package aiming to provide an RNetCDF-like set
 of functions that wrap the
 [`pizzarr`](https://github.com/keller-mark/pizzarr) package.
@@ -18,15 +20,39 @@ bcsd <- rnz::open_nz(z)
 
 class(bcsd)
 #> [1] "ZarrGroup" "R6"
+```
+
+``` r
+
+if(!is.null(bcsd)) {
 
 rnz::inq_nz_source(bcsd) |> str()
+
+rnz::inq_grp(bcsd) |> str() # only the root group supported
+
+rnz::inq_dim(bcsd, 0) |> str()
+rnz::inq_dim(bcsd, "latitude") |> str()
+
+rnz::inq_var(bcsd, 0) |> str()
+rnz::inq_var(bcsd, "latitude") |> str()
+
+rnz::inq_att(bcsd, 0, 5) |> str()
+rnz::inq_att(bcsd, "latitude", "units") |> str()
+
+rnz::get_var(bcsd, 0) |> str()
+rnz::get_var(bcsd, "latitude") |> str()
+
+rnz::get_att(bcsd, 0, 5)
+rnz::get_att(bcsd, "time", "units")
+
+rnz::nzdump(bcsd)
+
+}
 #> List of 4
 #>  $ ndims : int 3
 #>  $ nvars : int 5
 #>  $ ngatts: int 30
 #>  $ format: chr "HttpStore"
-
-rnz::inq_grp(bcsd) |> str() # only the root group supported
 #> List of 6
 #>  $ grps    : list()
 #>  $ name    : chr "/"
@@ -34,19 +60,14 @@ rnz::inq_grp(bcsd) |> str() # only the root group supported
 #>  $ dimids  : num [1:3] 0 1 2
 #>  $ varids  : num [1:5] 0 1 2 3 4
 #>  $ ngatts  : int 30
-
-rnz::inq_dim(bcsd, 0) |> str()
 #> List of 3
 #>  $ id    : num 0
 #>  $ name  : chr "latitude"
 #>  $ length: int 33
-rnz::inq_dim(bcsd, "latitude") |> str()
 #> List of 3
 #>  $ id    : num 0
 #>  $ name  : chr "latitude"
 #>  $ length: int 33
-
-rnz::inq_var(bcsd, 0) |> str()
 #> List of 6
 #>  $ id    : num 0
 #>  $ name  : chr "latitude"
@@ -54,7 +75,6 @@ rnz::inq_var(bcsd, 0) |> str()
 #>  $ ndims : int 1
 #>  $ dimids: num 0
 #>  $ natts : int 6
-rnz::inq_var(bcsd, "latitude") |> str()
 #> List of 6
 #>  $ id    : num 0
 #>  $ name  : chr "latitude"
@@ -62,31 +82,18 @@ rnz::inq_var(bcsd, "latitude") |> str()
 #>  $ ndims : int 1
 #>  $ dimids: num 0
 #>  $ natts : int 6
-
-rnz::inq_att(bcsd, 0, 5) |> str()
 #> List of 4
 #>  $ id    : num 5
 #>  $ name  : chr "units"
 #>  $ type  : chr "character"
 #>  $ length: int 1
-rnz::inq_att(bcsd, "latitude", "units") |> str()
 #> List of 4
 #>  $ id    : num 5
 #>  $ name  : chr "units"
 #>  $ type  : chr "character"
 #>  $ length: int 1
-
-rnz::get_var(bcsd, 0) |> str()
 #>  num [1:33(1d)] 33.1 33.2 33.3 33.4 33.6 ...
-rnz::get_var(bcsd, "latitude") |> str()
 #>  num [1:33(1d)] 33.1 33.2 33.3 33.4 33.6 ...
-
-rnz::get_att(bcsd, 0, 5)
-#> [1] "degrees_north"
-rnz::get_att(bcsd, "time", "units")
-#> [1] "days since 1950-01-01"
-
-rnz::nzdump(bcsd)
 #> zarr {
 #> dimensions:
 #> latitude = 33 ;
