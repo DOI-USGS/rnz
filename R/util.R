@@ -9,13 +9,20 @@ check_pizzarr <- function() {
 }
 
 
-#' Zarr demo data directory
-#' unzips and returns a demo Zarr store directory.
+#' nz demo data directory
+#' @param format character "netcdf" or "zarr"
+#' @return netcdf sample data or unzips and returns a demo Zarr store directory
 #' @export
 #' @examples
-#' list.files(z_demo(), recursive = TRUE, all.files = TRUE)
+#' list.files(z_demo(format = "zarr"), recursive = TRUE, all.files = TRUE)
 #'
-z_demo <- function() {
+#' basename(z_demo(format = "netcdf"))
+z_demo <- function(format = "zarr") {
+  if(format == "netcdf")
+    return(system.file("extdata", "bcsd_obs_1999.nc", package = "rnz"))
+
+  if(format != "zarr") stop("'format' must be \"zarr\" or \"netcdf\"")
+
   z <- "bcsd_obs_1999.zarr"
 
   dir <- file.path(tools::R_user_dir(package = "rnz"), z)

@@ -2,16 +2,21 @@
 % Please edit documentation in R/util.R
 \name{z_demo}
 \alias{z_demo}
-\title{Zarr demo data directory
-unzips and returns a demo Zarr store directory.}
+\title{nz demo data directory}
 \usage{
-z_demo()
+z_demo(format = "zarr")
+}
+\arguments{
+\item{format}{character "netcdf" or "zarr"}
+}
+\value{
+netcdf sample data or unzips and returns a demo Zarr store directory
 }
 \description{
-Zarr demo data directory
-unzips and returns a demo Zarr store directory.
+nz demo data directory
 }
 \examples{
-list.files(z_demo(), recursive = TRUE, all.files = TRUE)
+list.files(z_demo(format = "zarr"), recursive = TRUE, all.files = TRUE)
 
+basename(z_demo(format = "netcdf"))
 }

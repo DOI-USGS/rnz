@@ -2,9 +2,18 @@
 % Please edit documentation in R/inq_store.R
 \name{inq_nz_source}
 \alias{inq_nz_source}
+\alias{inq_nz_source.character}
+\alias{inq_nz_source.NetCDF}
+\alias{inq_nz_source.ZarrGroup}
 \title{Inquire Zarr Store}
 \usage{
 inq_nz_source(z)
+
+\method{inq_nz_source}{character}(z)
+
+\method{inq_nz_source}{NetCDF}(z)
+
+\method{inq_nz_source}{ZarrGroup}(z)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}
@@ -23,8 +32,8 @@ inq_nz_source(z)
 
 # equivalent data in NetCDF
 if(requireNamespace("RNetCDF", quietly = TRUE)) {
-  nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+  nc <- z_demo(format = "netcdf")
 
-  (RNetCDF::file.inq.nc(RNetCDF::open.nc(nc)))
+  (inq_nz_source(RNetCDF::open.nc(nc)))
 }
 }

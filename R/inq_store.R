@@ -1,7 +1,6 @@
 #' @title Inquire Zarr Store
 #' @param z an open ZarrGroup as returned by \link{open_nz}
 #' @return list similar to that returned by \link[RNetCDF]{file.inq.nc}
-#' @export
 #' @examples
 #'
 #' z <- open_nz(z_demo())
@@ -10,12 +9,31 @@
 #'
 #' # equivalent data in NetCDF
 #' if(requireNamespace("RNetCDF", quietly = TRUE)) {
-#'   nc <- system.file("extdata", "bcsd_obs_1999.nc", package = "rnz")
+#'   nc <- z_demo(format = "netcdf")
 #'
-#'   (RNetCDF::file.inq.nc(RNetCDF::open.nc(nc)))
+#'   (inq_nz_source(RNetCDF::open.nc(nc)))
 #' }
 #' @name inq_nz_source
+#' @export
 inq_nz_source <- function(z) {
+ UseMethod("inq_nz_source")
+}
+
+#' @name inq_nz_source
+#' @export
+inq_nz_source.character <- function(z) {
+  inq_nz_source(open_nz(z, warn = FALSE))
+}
+
+#' @name inq_nz_source
+#' @export
+inq_nz_source.NetCDF <- function(z) {
+  RNetCDF::file.inq.nc(z)
+}
+
+#' @name inq_nz_source
+#' @export
+inq_nz_source.ZarrGroup <- function(z) {
 
   if(is.null(z)) return(NULL)
 
@@ -29,3 +47,4 @@ inq_nz_source <- function(z) {
        format = class(z$get_store())[1])
 
 }
+
