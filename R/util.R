@@ -127,7 +127,7 @@ att_char_to_id <- function(z, var, char_att) {
 }
 
 att_prep <- function(z, var, att) {
-  if(var == "global") var <- -1
+  if(var == "global" | var == "NC_GLOBAL") var <- -1
 
   if(is.character(var)) var <- var_char_to_id(z, var)
   if(is.character(att)) att <- att_char_to_id(z, var, att)

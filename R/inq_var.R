@@ -70,7 +70,7 @@ inq_var.NULL <- function(z, var) {
 var_char_to_id <- function(z, char_var) {
   out <- which(get_vars(z) == char_var) - 1 # 0 indexed
 
-  if(length(out) == 0) stop("variable not found")
+  if(length(out) == 0) stop("variable ", char_var, " not found")
 
   out
 }

@@ -66,7 +66,7 @@ test_that("utils", {
 
   expect_equal(var_char_to_id(z, "pr"), 2)
 
-  expect_error(var_char_to_id(z, "br"), "variable not found")
+  expect_error(var_char_to_id(z, "br"), "variable br not found")
 
   expect_equal(att_char_to_id(z, "pr", "units"), 3)
 
