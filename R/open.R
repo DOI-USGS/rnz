@@ -38,7 +38,7 @@ open_nz <- function(nz, backend = NULL, warn = TRUE) {
 }
 
 try_zarr <- function(nz, warn) {
-    ret <- try(pizzarr::zarr_open(nz, mode = 'r'), silent = TRUE)
+    ret <- suppressWarnings(try(pizzarr::zarr_open(nz, mode = 'r'), silent = TRUE))
 
   if(warn & inherits(ret, "try-error")) warning("Failed to open as zarr", immediate. = TRUE)
 
@@ -67,11 +67,10 @@ open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
   }
 
   if(!is.null(backend) && backend == "RNetCDF" | inherits(ret, "try-error")) {
-    ret <- try(RNetCDF::open.nc(nz))
+    ret <- try(RNetCDF::open.nc(nz), silent = !warn)
 
     if(!inherits(ret, "try-error") & is.null(backend) & warn) {
       message("Opened as NetCDF")
-      on.exit(RNetCDF::close.nc(ret), add = TRUE)
     }
   }
 

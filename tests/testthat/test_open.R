@@ -37,6 +37,8 @@ test_that("open netcdf", {
 
   expect_equal(class(bcsd), "NetCDF")
 
-  expect_silent(open_nz(nc_file, backend = "RNetCDF"))
+  expect_silent(ret <- open_nz(nc_file, backend = "RNetCDF"))
+
+  expect_silent(close_nz(ret))
 
 })
