@@ -8,6 +8,8 @@
 #' @param count integer vector with length equal to the number of dimensions of var.
 #' Specifies the size of the returned array along the dimension in question. Can not
 #' be NA if start is not NA. -1 can be used to indicate all of a given dimension.
+#' @param collapse logical if TRUE degenerated dimensions (length=1) will be omitted.
+#' @param ... passed to RNetCDF var.get.nc
 #' @return array of data
 #' @examples
 #'
@@ -52,47 +54,57 @@
 #'
 #' @name get_var
 #' @export
-get_var <- function(z, var, start = NA, count = NA) {
+get_var <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
   UseMethod("get_var")
 }
 
 #' @name get_var
 #' @export
-get_var.character <- function(z, var, start = NA, count = NA) {
-  get_var(open_nz(z, warn = FALSE), var, start, count)
+get_var.character <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
+  get_var(open_nz(z, warn = FALSE), var, start, count, collapse = collapse, ...)
 }
 
 #' @name get_var
 #' @export
-get_var.NetCDF <- function(z, var, start = NA, count = NA) {
-  RNetCDF::var.get.nc(z, var, start, count, collapse = FALSE)
+get_var.NetCDF <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
+  RNetCDF::var.get.nc(z, var, start, count, collapse = collapse, ...)
 }
 
 #' @name get_var
 #' @export
-get_var.ZarrGroup <- function(z, var, start = NA, count = NA) {
+get_var.ZarrGroup <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
 
   v <- var_prep(z, var)
 
-  if(is.na(start)[1])
-    return(z$get_item(v$var_name)$as.array())
+  if(is.na(start)[1]) {
 
-  if(is.na(count)[1]) stop("must specify count if start is not NA")
+    out <- z$get_item(v$var_name)$as.array()
 
-  dim_size <- get_dim_size(z, v$var_name)[[1]]$length
+  } else {
 
-  if(length(start) != length(dim_size) |
-     length(count) != length(dim_size))
-    stop("start and count must have length\n",
-         "equal to the number of dimensions of var")
+    if(is.na(count)[1]) stop("must specify count if start is not NA")
 
-  slice_list <- lapply(seq_along(dim_size), \(i) {
-    if(count[i] == -1) count[i] <- dim_size[i]
-    pizzarr::slice(start[i], (start[i] + count[i] - 1))
-  })
+    dim_size <- get_dim_size(z, v$var_name)[[1]]$length
 
-  z$get_item(v$var_name)$get_item(slice_list)$as.array()
+    if(length(start) != length(dim_size) |
+       length(count) != length(dim_size))
+      stop("start and count must have length\n",
+           "equal to the number of dimensions of var")
 
+    start <- rev(start)
+    count <- rev(count)
+
+    slice_list <- lapply(seq_along(dim_size), \(i) {
+      if(count[i] == -1) count[i] <- dim_size[i]
+      pizzarr::slice(start[i], (start[i] + count[i] - 1))
+    })
+
+    out <- z$get_item(v$var_name)$get_item(slice_list)$as.array()
+  }
+
+  if((isTRUE(collapse) && !is.null(dim(out)))) out <- drop(out)
+
+  aperm(out, rev(seq_len(length(dim(out)))))
 }
 
 #' @name get_var

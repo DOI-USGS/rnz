@@ -39,7 +39,7 @@ test_that("get_var", {
 
   pr <- get_var(z, "pr")
 
-  expect_equal(dim(pr), c(12, 33, 81))
+  expect_equal(dim(pr), c(81, 33, 12))
 
   expect_equal(get_var(nc_file, "latitude"),
                get_var(z, "latitude"))
@@ -55,14 +55,17 @@ test_that("get_var", {
 
   pr_nc <- get_var(nc_file, "pr")
 
-  pr <- pr |> aperm(c(3,2,1))
-
   expect_true(all(pr == pr_nc, na.rm = TRUE))
 
   expect_equal(get_var(nc, var = "pr",
                        start = c(1,1,5), count = c(3,3,1)),
 
                get_var(z, var = "pr",
-                       start = c(5, 1, 1), count = c(1, 3, 3)) |>
-                 aperm(c(3, 2, 1))) # TODO #3
+                         start = c(1, 1, 5), count = c(3, 3, 1)))
+
+  expect_equal(get_var(nc, var = "pr",
+                       start = c(1,1,5), count = c(3,3,1), collapse = FALSE),
+
+               get_var(z, var = "pr",
+                       start = c(1, 1, 5), count = c(3, 3, 1), collapse = FALSE))
 })

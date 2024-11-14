@@ -8,13 +8,13 @@
 \alias{get_var.NULL}
 \title{Get Zarr Variable}
 \usage{
-get_var(z, var, start = NA, count = NA)
+get_var(z, var, start = NA, count = NA, collapse = TRUE, ...)
 
-\method{get_var}{character}(z, var, start = NA, count = NA)
+\method{get_var}{character}(z, var, start = NA, count = NA, collapse = TRUE, ...)
 
-\method{get_var}{NetCDF}(z, var, start = NA, count = NA)
+\method{get_var}{NetCDF}(z, var, start = NA, count = NA, collapse = TRUE, ...)
 
-\method{get_var}{ZarrGroup}(z, var, start = NA, count = NA)
+\method{get_var}{ZarrGroup}(z, var, start = NA, count = NA, collapse = TRUE, ...)
 
 \method{get_var}{`NULL`}(z, var, start = NA, count = NA)
 }
@@ -30,6 +30,10 @@ Uses R-style 1 indexing. If NA the entire array is returned.}
 \item{count}{integer vector with length equal to the number of dimensions of var.
 Specifies the size of the returned array along the dimension in question. Can not
 be NA if start is not NA. -1 can be used to indicate all of a given dimension.}
+
+\item{collapse}{logical if TRUE degenerated dimensions (length=1) will be omitted.}
+
+\item{...}{passed to RNetCDF var.get.nc}
 }
 \value{
 array of data
