@@ -33,7 +33,7 @@
 #' }
 #' @name open_nz
 #' @export
-open_nz <- function(nz, backend = NULL, warn = TRUE) {
+open_nz <- function(nz, backend = NULL, warn = FALSE) {
   UseMethod("open_nz")
 }
 
@@ -47,7 +47,7 @@ try_zarr <- function(nz, warn) {
 
 #' @name open_nz
 #' @export
-open_nz.Store <- function(nz, backend = NULL, warn = TRUE) {
+open_nz.Store <- function(nz, backend = NULL, warn = FALSE) {
 
   ret <- try_zarr(nz, warn)
 
@@ -56,7 +56,7 @@ open_nz.Store <- function(nz, backend = NULL, warn = TRUE) {
 
 #' @name open_nz
 #' @export
-open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
+open_nz.character <- function(nz, backend = NULL, warn = FALSE) {
 
   if(!is.null(backend) && !backend %in% c("pizzarr", "RNetCDF")) stop("'backend' must be NULL, \"pizzarr\", or \"RNetCDF\"")
 
@@ -79,6 +79,6 @@ open_nz.character <- function(nz, backend = NULL, warn = TRUE) {
 
 #' @name open_nz
 #' @export
-open_nz.NULL <- function(nz, backend = NULL, warn = TRUE) {
+open_nz.NULL <- function(nz, backend = NULL, warn = FALSE) {
   NULL
 }

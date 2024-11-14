@@ -7,13 +7,13 @@
 \alias{open_nz.NULL}
 \title{open netcdf or zarr}
 \usage{
-open_nz(nz, backend = NULL, warn = TRUE)
+open_nz(nz, backend = NULL, warn = FALSE)
 
-\method{open_nz}{Store}(nz, backend = NULL, warn = TRUE)
+\method{open_nz}{Store}(nz, backend = NULL, warn = FALSE)
 
-\method{open_nz}{character}(nz, backend = NULL, warn = TRUE)
+\method{open_nz}{character}(nz, backend = NULL, warn = FALSE)
 
-\method{open_nz}{`NULL`}(nz, backend = NULL, warn = TRUE)
+\method{open_nz}{`NULL`}(nz, backend = NULL, warn = FALSE)
 }
 \arguments{
 \item{nz}{a pizzarr store, a path to a zarr store, or a path to a netcdf resource}
