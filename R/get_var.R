@@ -7,7 +7,8 @@
 #' Uses R-style 1 indexing. If NA the entire array is returned.
 #' @param count integer vector with length equal to the number of dimensions of var.
 #' Specifies the size of the returned array along the dimension in question. Can not
-#' be NA if start is not NA. -1 can be used to indicate all of a given dimension.
+#' be NA if start is not NA. NA count in one or more dimensions can be used to
+#' indicate all of a given dimension.
 #' @param collapse logical if TRUE degenerated dimensions (length=1) will be omitted.
 #' @param ... passed to RNetCDF var.get.nc
 #' @return array of data
@@ -91,8 +92,7 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA, collapse = TRUE, .
       stop("start and count must have length\n",
            "equal to the number of dimensions of var")
 
-    start <- rev(start)
-    count <- rev(count)
+    count <- replace(count, is.na(count), -1)
 
     slice_list <- lapply(seq_along(dim_size), \(i) {
       if(count[i] == -1) count[i] <- dim_size[i]
@@ -104,7 +104,13 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA, collapse = TRUE, .
 
   if((isTRUE(collapse) && !is.null(dim(out)))) out <- drop(out)
 
-  aperm(out, rev(seq_len(length(dim(out)))))
+  out <- aperm(out, rev(seq_len(length(dim(out)))))
+
+  fill_val <- z$get_item(v$var_name)$get_fill_value()
+
+  out <- replace(out, out == fill_val, NaN)
+
+  out
 }
 
 #' @name get_var

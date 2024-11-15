@@ -61,11 +61,70 @@ test_that("get_var", {
                        start = c(1,1,5), count = c(3,3,1)),
 
                get_var(z, var = "pr",
-                         start = c(1, 1, 5), count = c(3, 3, 1)))
+                         start = c(5, 1, 1), count = c(1, 3, 3)))
 
   expect_equal(get_var(nc, var = "pr",
                        start = c(1,1,5), count = c(3,3,1), collapse = FALSE),
 
                get_var(z, var = "pr",
-                       start = c(1, 1, 5), count = c(3, 3, 1), collapse = FALSE))
+                       start = c(5, 1, 1), count = c(1, 3, 3), collapse = FALSE))
+})
+
+test_that("get dimid order", {
+
+  z_latitude <- get_var(z, "latitude")
+
+  z_longitude <- get_var(z, "longitude")
+
+  n_latitude <- get_var(nc, "latitude")
+
+  n_longitude <- get_var(nc, "longitude")
+
+  expect_equal(z_latitude, n_latitude)
+
+  expect_equal(z_longitude, n_longitude)
+
+  z_latitude <- get_var(z, "latitude", 1, 10)
+
+  z_longitude <- get_var(z, "longitude", 1, 20)
+
+  n_latitude <- get_var(nc, "latitude", 1, 10)
+
+  n_longitude <- get_var(nc, "longitude", 1, 20)
+
+  expect_equal(z_latitude, n_latitude)
+
+  expect_equal(z_longitude, n_longitude)
+
+  z_pr <- get_var(z, "pr")
+
+  n_pr <- get_var(nc, "pr")
+
+  expect_equal(z_pr, n_pr)
+
+  # say we want an xy slice first find the xy dimids
+  x_dimid <- inq_var(z, "longitude")$dimid
+  y_dimid <- inq_var(z, "latitude")$dimid
+  t_dimid <- inq_var(z, "time")$dimid
+  pr_dimid <- inq_var(z, "pr")$dimid
+
+  dimid_order <- match(c(x_dimid, y_dimid, t_dimid), pr_dimid)
+
+  # now select a full x y slice for 1 t
+  z_pr <- get_var(z, "pr",
+                  start = c(1, 1, 1)[dimid_order],
+                  count = c(NA, NA, 1)[dimid_order])
+
+  x_dimid <- inq_var(nc, "longitude")$dimid
+  y_dimid <- inq_var(nc, "latitude")$dimid
+  t_dimid <- inq_var(nc, "time")$dimid
+  pr_dimid <- inq_var(nc, "pr")$dimid
+
+  dimid_order <- match(c(x_dimid, y_dimid, t_dimid), pr_dimid)
+
+  n_pr <- get_var(nc, "pr",
+                  start = c(1, 1, 1)[dimid_order],
+                  count = c(NA, NA, 1)[dimid_order])
+
+  expect_equal(z_pr, n_pr)
 })

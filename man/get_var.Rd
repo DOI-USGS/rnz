@@ -29,7 +29,8 @@ Uses R-style 1 indexing. If NA the entire array is returned.}
 
 \item{count}{integer vector with length equal to the number of dimensions of var.
 Specifies the size of the returned array along the dimension in question. Can not
-be NA if start is not NA. -1 can be used to indicate all of a given dimension.}
+be NA if start is not NA. NA count in one or more dimensions can be used to
+indicate all of a given dimension.}
 
 \item{collapse}{logical if TRUE degenerated dimensions (length=1) will be omitted.}
 

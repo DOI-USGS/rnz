@@ -33,7 +33,8 @@ test_that("open http", {
 test_that("open netcdf", {
   skip_if_not_installed("RNetCDF")
 
-  expect_message(expect_warning(bcsd <- open_nz(nc_file), "Failed to open as zarr"), "Opened as NetCDF")
+  expect_message(expect_warning(bcsd <- open_nz(nc_file, warn = TRUE),
+                                "Failed to open as zarr"), "Opened as NetCDF")
 
   expect_equal(class(bcsd), "NetCDF")
 
