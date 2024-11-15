@@ -55,25 +55,29 @@
 #'
 #' @name get_var
 #' @export
-get_var <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
+get_var <- function(z, var, start = NA, count = NA,
+                    collapse = TRUE, unpack = FALSE, ...) {
   UseMethod("get_var")
 }
 
 #' @name get_var
 #' @export
-get_var.character <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
+get_var.character <- function(z, var, start = NA, count = NA,
+                              collapse = TRUE, unpack = FALSE, ...) {
   get_var(open_nz(z, warn = FALSE), var, start, count, collapse = collapse, ...)
 }
 
 #' @name get_var
 #' @export
-get_var.NetCDF <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
-  RNetCDF::var.get.nc(z, var, start, count, collapse = collapse, ...)
+get_var.NetCDF <- function(z, var, start = NA, count = NA,
+                           collapse = TRUE, unpack = FALSE, ...) {
+  RNetCDF::var.get.nc(z, var, start, count, collapse = collapse, unpack = unpack, ...)
 }
 
 #' @name get_var
 #' @export
-get_var.ZarrGroup <- function(z, var, start = NA, count = NA, collapse = TRUE, ...) {
+get_var.ZarrGroup <- function(z, var, start = NA, count = NA,
+                              collapse = TRUE, unpack = FALSE, ...) {
 
   v <- var_prep(z, var)
 
@@ -110,11 +114,21 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA, collapse = TRUE, .
 
   out <- replace(out, out == fill_val, NaN)
 
+  if(isTRUE(unpack)) {
+    scale <- z$get_item(v$var_name)$get_attrs()$get_item("scale_factor")
+    offset <- z$get_item(v$var_name)$get_attrs()$get_item("add_offset")
+
+    if(is.null(offset)) offset <- 0
+
+    if(!is.null(scale)) out <- (out * scale) + offset
+  }
+
   out
 }
 
 #' @name get_var
 #' @export
-get_var.NULL <- function(z, var, start = NA, count = NA) {
+get_var.NULL <- function(z, var, start = NA, count = NA,
+                         collapse = TRUE, unpack = FALSE, ...) {
   NULL
 }

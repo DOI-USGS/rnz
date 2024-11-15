@@ -8,15 +8,15 @@
 \alias{get_var.NULL}
 \title{Get Zarr Variable}
 \usage{
-get_var(z, var, start = NA, count = NA, collapse = TRUE, ...)
+get_var(z, var, start = NA, count = NA, collapse = TRUE, unpack = FALSE, ...)
 
-\method{get_var}{character}(z, var, start = NA, count = NA, collapse = TRUE, ...)
+\method{get_var}{character}(z, var, start = NA, count = NA, collapse = TRUE, unpack = FALSE, ...)
 
-\method{get_var}{NetCDF}(z, var, start = NA, count = NA, collapse = TRUE, ...)
+\method{get_var}{NetCDF}(z, var, start = NA, count = NA, collapse = TRUE, unpack = FALSE, ...)
 
-\method{get_var}{ZarrGroup}(z, var, start = NA, count = NA, collapse = TRUE, ...)
+\method{get_var}{ZarrGroup}(z, var, start = NA, count = NA, collapse = TRUE, unpack = FALSE, ...)
 
-\method{get_var}{`NULL`}(z, var, start = NA, count = NA)
+\method{get_var}{`NULL`}(z, var, start = NA, count = NA, collapse = TRUE, unpack = FALSE, ...)
 }
 \arguments{
 \item{z}{an open ZarrGroup as returned by \link{open_nz}}

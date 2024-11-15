@@ -128,3 +128,25 @@ test_that("get dimid order", {
 
   expect_equal(z_pr, n_pr)
 })
+
+test_that("scale offset", {
+  temp_test <- tempdir()
+
+  file.copy(z_path, temp_test, recursive = TRUE)
+
+  path <- file.path(temp_test, basename(z_path))
+
+  ncmeta::nc_meta(path)
+
+  z <- rnz::open_nz(path)
+
+  z$get_item("pr")$get_attrs()$set_item("scale_factor", 0.1)
+
+  expect_equal(get_var(nc_file, "pr"), get_var(z, "pr"))
+
+  expect_equal(get_var(nc_file, "pr"), get_var(z, "pr", unpack = TRUE) * 10)
+
+  z$get_item("pr")$get_attrs()$set_item("add_offset", 100)
+
+  expect_equal(get_var(nc_file, "pr"), (get_var(z, "pr", unpack = TRUE) - 100) * 10)
+})
