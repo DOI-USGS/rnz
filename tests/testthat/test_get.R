@@ -169,8 +169,6 @@ test_that("scale offset", {
 
   path <- file.path(temp_test, basename(z_path))
 
-  ncmeta::nc_meta(path)
-
   z <- rnz::open_nz(path)
 
   z$get_item("pr")$get_attrs()$set_item("scale_factor", 0.1)

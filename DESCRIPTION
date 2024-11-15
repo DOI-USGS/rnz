@@ -9,12 +9,11 @@ Authors@R:
            email = "dblodgett@usgs.gov",
            comment = c(ORCID = "0000-0001-9489-1710"))
 Description: Implements a RNetCDF-like set of functions for NetCDF and zarr data based on the pizzarr package.
-Imports: tools, utils
+Imports: tools, utils, RNetCDF
 Suggests: 
     pizzarr,
     knitr,
     rmarkdown,
-    RNetCDF,
     testthat (>= 3.0.0)
 Remotes: keller-mark/pizzarr
 License: CC0
