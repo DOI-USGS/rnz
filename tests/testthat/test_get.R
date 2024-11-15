@@ -1,3 +1,18 @@
+# # NOTE: this compares a zarr copy and a netcdf copy of the same data.
+# # while these are the same data, they are not in the same axis order.
+#
+# # in zarr, the x, y, t dimensions are in 3, 2, 1 order
+# c(inq_var(z, "longitude")$dimid,
+#   inq_var(z, "latitude")$dimid,
+#   inq_var(z, "time")$dimid)
+# inq_var(z, "pr")$dimid
+#
+# # in netcdf, the x, y, t dimensions are in 1, 2, 3 order
+# c(inq_var(nc, "longitude")$dimid,
+#   inq_var(nc, "latitude")$dimid,
+#   inq_var(nc, "time")$dimid)
+# inq_var(nc, "pr")$dimid
+
 test_that("get_att", {
   skip_if_not_installed("pizzarr")
 
@@ -37,9 +52,24 @@ test_that("get_var", {
 
   expect_equal(dim(latitude), 33)
 
+  time <- get_var(z, "time")
+
+  expect_equal(dim(time), 12)
+
+  longitude <- get_var(z, "longitude")
+
+  expect_equal(class(longitude), "array")
+
+  expect_equal(dim(longitude), 81)
+
+  pr_inq <- inq_var(z, "pr")
+
+  # T, Y, X (some hardcoding for tests)
+  expect_equal(pr_inq$dimids, c(2, 0, 1))
+
   pr <- get_var(z, "pr")
 
-  expect_equal(dim(pr), c(81, 33, 12))
+  expect_equal(dim(pr), c(dim(time), dim(latitude), dim(longitude)))
 
   expect_equal(get_var(nc_file, "latitude"),
                get_var(z, "latitude"))
@@ -55,19 +85,22 @@ test_that("get_var", {
 
   pr_nc <- get_var(nc_file, "pr")
 
-  expect_true(all(pr == pr_nc, na.rm = TRUE))
+  # need to permute order from zarr
+  # axis order is switched in metadata in zarr AND in the array
+  expect_true(all(aperm(pr, c(3, 2, 1)) == pr_nc, na.rm = TRUE))
 
   expect_equal(get_var(nc, var = "pr",
                        start = c(1,1,5), count = c(3,3,1)),
 
-               get_var(z, var = "pr",
-                         start = c(5, 1, 1), count = c(1, 3, 3)))
+               aperm(get_var(z, var = "pr",
+                         start = c(5, 1, 1), count = c(1, 3, 3)), c(2, 1)))
 
   expect_equal(get_var(nc, var = "pr",
                        start = c(1,1,5), count = c(3,3,1), collapse = FALSE),
 
-               get_var(z, var = "pr",
-                       start = c(5, 1, 1), count = c(1, 3, 3), collapse = FALSE))
+               aperm(get_var(z, var = "pr",
+                       start = c(5, 1, 1), count = c(1, 3, 3),
+                       collapse = FALSE), c(3, 2, 1)))
 })
 
 test_that("get dimid order", {
@@ -100,7 +133,7 @@ test_that("get dimid order", {
 
   n_pr <- get_var(nc, "pr")
 
-  expect_equal(z_pr, n_pr)
+  expect_equal(aperm(z_pr, c(3, 2, 1)), n_pr)
 
   # say we want an xy slice first find the xy dimids
   x_dimid <- inq_var(z, "longitude")$dimid
@@ -126,7 +159,7 @@ test_that("get dimid order", {
                   start = c(1, 1, 1)[dimid_order],
                   count = c(NA, NA, 1)[dimid_order])
 
-  expect_equal(z_pr, n_pr)
+  expect_equal(aperm(z_pr, c(2, 1)), n_pr)
 })
 
 test_that("scale offset", {
@@ -142,11 +175,15 @@ test_that("scale offset", {
 
   z$get_item("pr")$get_attrs()$set_item("scale_factor", 0.1)
 
-  expect_equal(get_var(nc_file, "pr"), get_var(z, "pr"))
+  expect_equal(get_var(nc_file, "pr"),
+               aperm(get_var(z, "pr"), c(3,2,1)))
 
-  expect_equal(get_var(nc_file, "pr"), get_var(z, "pr", unpack = TRUE) * 10)
+  expect_equal(get_var(nc_file, "pr"),
+               aperm(get_var(z, "pr", unpack = TRUE), c(3,2,1)) * 10)
 
   z$get_item("pr")$get_attrs()$set_item("add_offset", 100)
 
-  expect_equal(get_var(nc_file, "pr"), (get_var(z, "pr", unpack = TRUE) - 100) * 10)
+  expect_equal(get_var(nc_file, "pr"),
+               aperm((get_var(z, "pr", unpack = TRUE) - 100) * 10,
+                     c(3, 2, 1)))
 })

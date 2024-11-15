@@ -108,8 +108,6 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA,
 
   if((isTRUE(collapse) && !is.null(dim(out)))) out <- drop(out)
 
-  out <- aperm(out, rev(seq_len(length(dim(out)))))
-
   fill_val <- z$get_item(v$var_name)$get_fill_value()
 
   out <- replace(out, out == fill_val, NaN)
