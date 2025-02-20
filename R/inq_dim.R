@@ -51,7 +51,7 @@ inq_dim.ZarrGroup <- function(z, dim) {
 
   rep_var <- get_rep_var(z, dim_name)
 
-  rep_var_len <- get_array_dims(z$get_item(rep_var))
+  rep_var_len <- get_array_dims(z, rep_var)
 
   rep_var_len <- rep_var_len$length[which(rep_var_len$name == dim_name)]
 

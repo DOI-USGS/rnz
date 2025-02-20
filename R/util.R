@@ -32,18 +32,40 @@ nodots <- function(x) {
 }
 
 # pull out the `_ARRAY_DIMENSIONS` xarray convention
-get_array_dims <- function(x, include_size = TRUE) {
-  stopifnot(inherits(x, "ZarrArray"))
+get_array_dims <- function(z, x, include_size = TRUE) {
+  out <- NULL
 
-  out <- list(name = as.character(x$get_attrs()$to_list()$`_ARRAY_DIMENSIONS`))
+  if(inherits(z, "ZarrGroup")) {
 
-  if(include_size) {
+    x <- z$get_item(x)
 
-    out$length <- sapply(seq_along(out$name), \(i) x$get_shape()[i])
+    out <- list(name = as.character(x$get_attrs()$to_list()$`_ARRAY_DIMENSIONS`))
 
+    if(include_size) {
+
+      out$length <- sapply(seq_along(out$name), \(i) x$get_shape()[i])
+
+    }
+  } else if(inherits(z, "list")) {
+
+    atts <- z[grepl(paste0("^", x, "\\/.zattrs"), names(z))]
+
+    if(length(atts) != 1) stop("attributes are not a length 1 list in ", x)
+
+    out <- list(name = as.character(atts[[1]]$`_ARRAY_DIMENSIONS`))
+
+    if(include_size) {
+
+      atts <- z[grepl(paste0("^", x, "\\/.zarray"), names(z))]
+
+      if(length(atts) != 1) stop("array metadata is not a length 1 list in ", x)
+
+      out$length <- unlist(lapply(seq_along(out$name), \(i) atts[[1]]$shape[i]))
+
+    }
   }
 
-  out
+    out
 }
 
 # gets the unique array dimensions.
@@ -56,7 +78,14 @@ get_unique_dims <- function(z, vars = get_vars(z)) {
 
 # gets all array dimensions for provided vars
 get_all_dims <- function(z, vars = get_vars(z)) {
-  out <- lapply(vars, \(x) get_array_dims(z$get_item(x), include_size = FALSE))
+
+  meta <- z$get_store()$get_consolidated_metadata()
+
+  if(!is.null(meta$zarr_consolidated_format) && meta$zarr_consolidated_format == 1) {
+    z <- meta$metadata
+  }
+
+  out <- lapply(vars, \(x) get_array_dims(z, x, include_size = FALSE))
 
   names(out) <- vars
 
@@ -65,7 +94,7 @@ get_all_dims <- function(z, vars = get_vars(z)) {
 
 get_dim_size <- function(z, vars = get_vars(z)) {
 
-  out <- lapply(vars, \(x) get_array_dims(z$get_item(x), include_size = TRUE))
+  out <- lapply(vars, \(x) get_array_dims(z, x, include_size = TRUE))
 
   names(out) <- vars
 

@@ -11,11 +11,11 @@ test_that("utils", {
                  time = list(name = "time")
                ))
 
-  expect_equal(get_array_dims(z$get_item("pr"), TRUE),
+  expect_equal(get_array_dims(z, "pr", TRUE),
                list(name = c("time", "latitude", "longitude"),
                     length = c(12L, 33L, 81L)))
 
-  expect_equal(get_array_dims(z$get_item("pr"), FALSE),
+  expect_equal(get_array_dims(z, "pr", FALSE),
                list(name = c("time", "latitude", "longitude")))
 
   expect_equal(get_attributes(z, 0),
