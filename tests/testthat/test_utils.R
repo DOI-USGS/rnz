@@ -85,7 +85,7 @@ test_that("utils", {
 
   }
 
-  test_fun(z)
+  test_fun(zarr_test)
 
   test_fun(zarr_consolidated)
 

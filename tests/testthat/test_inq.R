@@ -3,15 +3,15 @@ test_that("inq", {
 
   expect_null(inq_nz_source(NULL))
 
-  expect_equal(inq_nz_source(z_path), inq_nz_source(z))
+  expect_equal(inq_nz_source(z_path), inq_nz_source(zarr_test))
 
-  expect_equal(inq_nz_source(z),
+  expect_equal(inq_nz_source(zarr_test),
                list(ndims = 3L,
                     nvars = 5L,
                     ngatts = 30L,
                     format = "DirectoryStore"))
 
-  expect_equal(inq_grp(z),
+  expect_equal(inq_grp(zarr_test),
                list(grps = list(),
                     name = "/",
                     fullname = "/",
@@ -21,42 +21,42 @@ test_that("inq", {
 
   expect_null(inq_grp(NULL))
 
-  expect_equal(inq_dim(z, 0),
+  expect_equal(inq_dim(zarr_test, 0),
                list(id = 0, name = "latitude", length = 33L))
 
-  expect_equal(inq_dim(z, 0),
-               inq_dim(z, "latitude"))
+  expect_equal(inq_dim(zarr_test, 0),
+               inq_dim(zarr_test, "latitude"))
 
   expect_null(inq_dim(NULL))
 
-  expect_error(inq_dim(z, "nope"), "dimension not found")
+  expect_error(inq_dim(zarr_test, "nope"), "dimension not found")
 
-  expect_equal(inq_var(z, "pr"),
+  expect_equal(inq_var(zarr_test, "pr"),
                list(id = 2, name = "pr", type = "<f4",
                     ndims = 3L, dimids = c(2,0,1), natts = 4L))
 
-  expect_equal(inq_var(z, "pr"),
-               inq_var(z, 2))
+  expect_equal(inq_var(zarr_test, "pr"),
+               inq_var(zarr_test, 2))
 
-  expect_error(inq_var(z, c(1,2)))
+  expect_error(inq_var(zarr_test, c(1,2)))
 
   expect_null(inq_var(NULL))
 
-  expect_equal(inq_att(z, "pr", "units"),
+  expect_equal(inq_att(zarr_test, "pr", "units"),
                list(id = 3, name = "units", type = "character", length = 1L))
 
-  expect_error(inq_att(z, 2, 4), "index")
+  expect_error(inq_att(zarr_test, 2, 4), "index")
 
-  expect_equal(inq_att(z, 2, 3),
-               inq_att(z, "pr", "units"))
+  expect_equal(inq_att(zarr_test, 2, 3),
+               inq_att(zarr_test, "pr", "units"))
 
-  expect_equal(inq_att(z, -1, 2),
+  expect_equal(inq_att(zarr_test, -1, 2),
                list(id = 2, name = "Conventions", type = "character", length = 1L))
 
-  expect_equal(inq_att(z, -1, 2),
-               inq_att(z, "global", "Conventions"))
+  expect_equal(inq_att(zarr_test, -1, 2),
+               inq_att(zarr_test, "global", "Conventions"))
 
-  expect_error(inq_att(z, "pr", "br"), "attribute not found")
+  expect_error(inq_att(zarr_test, "pr", "br"), "attribute not found")
 
   expect_null(inq_att(NULL))
 
@@ -118,20 +118,20 @@ test_that("inq netcdf", {
   expect_equal(inq, inq_nz_source(nc_file))
 
   expect_equal(inq[1:3],
-               inq_nz_source(z)[1:3])
+               inq_nz_source(zarr_test)[1:3])
 
   inq <- inq_grp(nc)
 
   expect_equal(inq[2:9], inq_grp(nc_file)[2:9])
 
   expect_equal(inq[2:5],
-               inq_grp(z)[1:4])
+               inq_grp(zarr_test)[1:4])
 
   inq <- inq_dim(nc, 0)
 
   expect_equal(inq, inq_dim(nc_file, "latitude"))
 
-  expect_equal(inq[1:3], inq_dim(z, "latitude")[1:3])
+  expect_equal(inq[1:3], inq_dim(zarr_test, "latitude")[1:3])
 
   inq <- inq_var(nc, 0)
 
@@ -140,7 +140,7 @@ test_that("inq netcdf", {
   expect_equal(inq, inq_var(nc_file, "latitude"))
 
   expect_equal(inq[c(1:2, 4:6)],
-               inq_var(z, "latitude")[c(1:2, 4:6)])
+               inq_var(zarr_test, "latitude")[c(1:2, 4:6)])
 
   inq <- inq_att(nc, 0, 0)
 
@@ -150,5 +150,5 @@ test_that("inq netcdf", {
 
   # TODO get more inq_att to match up?
   expect_equal(inq[c(2)],
-               inq_att(z, "latitude", "standard_name")[c(2)])
+               inq_att(zarr_test, "latitude", "standard_name")[c(2)])
 })

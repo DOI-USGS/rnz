@@ -25,9 +25,9 @@ test_that("open http", {
 
   url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 
-  z <- rnz::open_nz(url)
+  zarr_group <- rnz::open_nz(url)
 
-  expect_equal(class(z), c("ZarrGroup", "R6"))
+  expect_equal(class(zarr_group), c("ZarrGroup", "R6"))
 })
 
 test_that("open netcdf", {
