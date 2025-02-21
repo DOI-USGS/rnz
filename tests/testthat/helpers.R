@@ -1,7 +1,8 @@
 z_path <- z_demo()
 
 if(requireNamespace("pizzarr", quietly = TRUE)) {
-  z <- open_nz(z_path)
+  zarr_consolidated <- open_nz("https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr")
+  zarr_test <- open_nz(z_path)
 }
 
 nc_file <- z_demo(format = "netcdf")

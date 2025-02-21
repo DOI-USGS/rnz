@@ -48,7 +48,7 @@ get_array_dims <- function(z, x, include_size = TRUE) {
     }
   } else if(inherits(z, "list")) {
 
-    atts <- z[grepl(paste0("^", x, "\\/.zattrs"), names(z))]
+    atts <- z[names(z) == paste0(x, "/.zattrs")]
 
     if(length(atts) != 1) stop("attributes are not a length 1 list in ", x)
 
@@ -56,7 +56,7 @@ get_array_dims <- function(z, x, include_size = TRUE) {
 
     if(include_size) {
 
-      atts <- z[grepl(paste0("^", x, "\\/.zarray"), names(z))]
+      atts <- z[names(z) == paste0(x, "/.zarray")]
 
       if(length(atts) != 1) stop("array metadata is not a length 1 list in ", x)
 
@@ -79,13 +79,16 @@ get_unique_dims <- function(z, vars = get_vars(z)) {
 # gets all array dimensions for provided vars
 get_all_dims <- function(z, vars = get_vars(z)) {
 
+  # need to force vars to be evaluated
+  var_set <- vars
+
   meta <- z$get_store()$get_consolidated_metadata()
 
   if(!is.null(meta$zarr_consolidated_format) && meta$zarr_consolidated_format == 1) {
     z <- meta$metadata
   }
 
-  out <- lapply(vars, \(x) get_array_dims(z, x, include_size = FALSE))
+  out <- lapply(var_set, \(x) get_array_dims(z, x, include_size = FALSE))
 
   names(out) <- vars
 

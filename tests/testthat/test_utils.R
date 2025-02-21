@@ -2,7 +2,9 @@ test_that("utils", {
 
   skip_if_not_installed("pizzarr")
 
-  expect_equal(get_all_dims(z),
+  test_fun <- function(zarr) {
+
+  expect_equal(get_all_dims(zarr),
                list(
                  latitude = list(name = "latitude"),
                  longitude = list(name = "longitude"),
@@ -11,14 +13,23 @@ test_that("utils", {
                  time = list(name = "time")
                ))
 
-  expect_equal(get_array_dims(z, "pr", TRUE),
+    expect_equal(get_all_dims(zarr),
+               list(
+                 latitude = list(name = "latitude"),
+                 longitude = list(name = "longitude"),
+                 pr = list(name = c("time", "latitude", "longitude")),
+                 tas = list(name = c("time", "latitude", "longitude")),
+                 time = list(name = "time")
+               ))
+
+  expect_equal(get_array_dims(zarr, "pr", TRUE),
                list(name = c("time", "latitude", "longitude"),
                     length = c(12L, 33L, 81L)))
 
-  expect_equal(get_array_dims(z, "pr", FALSE),
+  expect_equal(get_array_dims(zarr, "pr", FALSE),
                list(name = c("time", "latitude", "longitude")))
 
-  expect_equal(get_attributes(z, 0),
+  expect_equal(get_attributes(zarr, 0),
                list(
                  `_ARRAY_DIMENSIONS` = list("latitude"),
                  `_CoordinateAxisType` = "Lat",
@@ -29,7 +40,7 @@ test_that("utils", {
                  units = "degrees_north"
                ))
 
-  expect_equal(get_attributes(z, 0, noarray = TRUE),
+  expect_equal(get_attributes(zarr, 0, noarray = TRUE),
                list(
                  `_CoordinateAxisType` = "Lat",
                  axis = "Y",
@@ -39,11 +50,11 @@ test_that("utils", {
                  units = "degrees_north"
                ))
 
-  expect_equal(get_coord_vars(z),
+  expect_equal(get_coord_vars(zarr),
                c("latitude", "longitude", "time"))
 
 
-  expect_equal(get_dim_size(z),
+  expect_equal(get_dim_size(zarr),
                list(
                  latitude = list(name = "latitude", length = 33L),
                  longitude = list(name = "longitude", length = 81L),
@@ -52,24 +63,31 @@ test_that("utils", {
                  time = list(name = "time", length = 12L)
                ))
 
-  expect_equal(get_rep_var(z, "latitude"),
+  expect_equal(get_rep_var(zarr, "latitude"),
                "latitude")
 
-  expect_equal(get_unique_dims(z),
+  expect_equal(get_unique_dims(zarr),
                c("latitude", "longitude", "time"))
 
-  expect_equal(get_vars(z),
+  expect_equal(get_vars(zarr),
                c("latitude", "longitude", "pr", "tas", "time"))
 
-  expect_equal(nodots(z$get_store()$listdir()),
+  expect_equal(nodots(zarr$get_store()$listdir()),
                c("latitude", "longitude", "pr", "tas", "time"))
 
-  expect_equal(var_char_to_id(z, "pr"), 2)
+  expect_equal(var_char_to_id(zarr, "pr"), 2)
 
-  expect_error(var_char_to_id(z, "br"), "variable br not found")
+  expect_error(var_char_to_id(zarr, "br"), "variable br not found")
 
-  expect_equal(att_char_to_id(z, "pr", "units"), 3)
+  expect_equal(att_char_to_id(zarr, "pr", "units"), 3)
 
-  expect_equal(att_char_to_id(z, 2, "units"), 3)
+  expect_equal(att_char_to_id(zarr, 2, "units"), 3)
+
+  }
+
+  test_fun(zarr_test)
+
+  skip_on_ci()
+  test_fun(zarr_consolidated)
 
 })
