@@ -87,7 +87,7 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA,
 
   } else {
 
-    if(is.na(count)[1]) stop("must specify count if start is not NA")
+    if(length(count) == 1 && is.na(count)[1]) stop("must specify count if start is not NA")
 
     dim_size <- get_dim_size(z, v$var_name)[[1]]$length
 
