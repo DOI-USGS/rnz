@@ -87,7 +87,7 @@ test_that("utils", {
 
   test_fun(zarr_test)
 
-  skip_on_ci("not working on actions")
+  skip_on_ci()
   test_fun(zarr_consolidated)
 
 })
