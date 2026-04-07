@@ -9,3 +9,5 @@ LICENSE.md
 ^pkgdown$
 inst/extdata/bcsd.zarr
 .github
+CONTEXT.md
+CLAUDE.md
