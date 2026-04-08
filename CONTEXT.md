@@ -79,7 +79,6 @@ Conventions inherited from pizzarr that apply here:
 - `Rscript -e "devtools::test()"` — run tests
 - `Rscript -e "devtools::check()"` — R CMD check
 - `Rscript -e "devtools::document()"` — rebuild roxygen docs
-- Rscript on this machine: `/c/Users/dblodgett/AppData/Local/Programs/R/R-4.5.2/bin/Rscript.exe`
 - Multiline R commands must be run from a script file, not pasted into
   the bash tool, to avoid terminal segfaults on Windows.
 

@@ -3,7 +3,7 @@
 
 # rnz <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
-[![codecov](https://codecov.io/github/dblodgett-usgs/rnz/graph/badge.svg?token=8DZJ7RYIOJ)](https://codecov.io/github/dblodgett-usgs/rnz)
+[![codecov](https://codecov.io/github/doi-usgs/rnz/graph/badge.svg)](https://codecov.io/github/doi-usgs/rnz)
 
 `rnz` provides one RNetCDF-shaped inquiry and read API — `open_nz`,
 `inq_dim`, `inq_var`, `get_var`, `get_att`, `nzdump` — that returns the
