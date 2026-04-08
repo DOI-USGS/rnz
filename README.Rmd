@@ -13,13 +13,15 @@
 )
 ```
 
-# `rnz` R NetCDF Zarr
-
 # rnz <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 [![codecov](https://codecov.io/github/dblodgett-usgs/rnz/graph/badge.svg?token=8DZJ7RYIOJ)](https://codecov.io/github/dblodgett-usgs/rnz)
 
-This is a work in progress package aiming to provide an RNetCDF-like set of functions that wrap the [`pizzarr`](https://github.com/keller-mark/pizzarr) package.
+`rnz` provides one RNetCDF-shaped inquiry and read API — `open_nz`, `inq_dim`, `inq_var`, `get_var`, `get_att`, `nzdump` — that returns the same shapes whether the source is a NetCDF file or a Zarr store. NetCDF access is delegated to [`RNetCDF`](https://cran.r-project.org/package=RNetCDF); Zarr access is delegated to [`pizzarr`](https://github.com/keller-mark/pizzarr). Code written against `rnz` does not branch on which backend is in use.
+
+On the Zarr side, `rnz` reads structural metadata according to the [NZ-1.0 convention](https://github.com/zarr-conventions/nz/) — the structural layer that puts [NetCDF Users Guide](https://docs.unidata.ucar.edu/nug/current/) (NUG) semantics on top of Zarr v3. NZ-1.0 is to Zarr v3 what the NUG is to netCDF-4: it pins shared dimensions, dimension coordinates, and `_FillValue` semantics so that domain conventions written against the NUG (CF, GeoZarr, and others) carry across both ecosystems unchanged. For Zarr v2 stores, `rnz` continues to read xarray's `_ARRAY_DIMENSIONS` attribute — the v3 / NZ path activates automatically when array metadata carries `dimension_names`.
+
+The example below opens the bundled BCSD demo store and exercises the full inquiry/read API against it:
 
 ```{r demo}
 
