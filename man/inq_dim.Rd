@@ -27,7 +27,9 @@ inq_dim(z, dim)
 list similar to that returned by \link[RNetCDF]{dim.inq.nc}
 }
 \description{
-NOTE: assumes the `_ARRAY_DIMENSION` convention from `xarray`
+NOTE: for Zarr v2 stores, reads the `_ARRAY_DIMENSIONS` xarray
+attribute; for Zarr v3 / NZ-1.0 stores, reads `dimension_names`
+from `zarr.json` via `pizzarr::ZarrArray$get_dimension_names()`.
 }
 \examples{
 

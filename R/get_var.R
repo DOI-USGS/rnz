@@ -108,9 +108,18 @@ get_var.ZarrGroup <- function(z, var, start = NA, count = NA,
 
   if((isTRUE(collapse) && !is.null(dim(out)))) out <- drop(out)
 
-  fill_val <- z$get_item(v$var_name)$get_fill_value()
+  # NUG / NZ-1.0: the semantic missing-data sentinel is the `_FillValue`
+  # attribute, which is decoupled from Zarr's storage-level `fill_value`
+  # (an implementation detail of chunk encoding). Prefer the attribute
+  # for masking; fall back to the storage value only when no attribute
+  # is set so v2 stores written without `_FillValue` keep working.
+  zv <- z$get_item(v$var_name)
+  fill_val <- zv$get_attrs()$get_item("_FillValue")
+  if (is.null(fill_val)) fill_val <- zv$get_fill_value()
 
-  out <- replace(out, out == fill_val, NaN)
+  if (!is.null(fill_val)) {
+    out <- replace(out, out == fill_val, NaN)
+  }
 
   if(isTRUE(unpack)) {
     scale <- z$get_item(v$var_name)$get_attrs()$get_item("scale_factor")

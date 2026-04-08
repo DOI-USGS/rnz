@@ -43,7 +43,13 @@ inq_nz_source.ZarrGroup <- function(z) {
 
   vars <- nodots(z$get_store()$listdir())
 
-  list(ndims = max(sapply(vars, \(x) z$get_item(x)$get_ndim())),
+  # NUG / NZ-1.0: `ndims` is the number of distinct named dimensions in
+  # the group (the count of unique `dimension_names` entries across all
+  # arrays, equivalently the size of the shared-dimension label set), not
+  # the rank of the highest-rank single array. Two disjoint 2D arrays on
+  # `(x,y)` and `(z,t)` define four dimensions, even though no single
+  # array has rank > 2.
+  list(ndims = length(get_unique_dims(z)),
        nvars = length(vars),
        ngatts = length(z$get_attrs()$to_list()),
        format = class(z$get_store())[1])

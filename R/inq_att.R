@@ -54,9 +54,19 @@ inq_att.ZarrGroup <- function(z, var, att) {
 
   a <- att_prep(z, var, att)
 
+  att_name <- names(a$atts)[a$att + 1]
+
+  # NUG attribute inquiry returns the on-disk numeric type (NC_FLOAT,
+  # NC_DOUBLE, ...). JSON-encoded Zarr attributes lose that distinction
+  # at parse time, so consult the NCZarr `_nczarr_attr.types` annotation
+  # for the queried attribute first; only fall back to the R runtime
+  # class when no annotation is present.
+  type <- a$nczarr_types[[att_name]]
+  if(is.null(type)) type <- class(unlist(a$atts[a$att + 1]))
+
   list(id = a$att,
-       name = names(a$atts)[a$att + 1],
-       type = class(unlist(a$atts[a$att + 1])),
+       name = att_name,
+       type = type,
        length = length(a$atts[[a$att + 1]]))
 
 }
