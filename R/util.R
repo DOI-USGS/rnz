@@ -27,8 +27,10 @@ z_demo <- function(format = "zarr") {
 }
 
 # useful for getting only the data arrays
+# v2 metadata files (.zattrs/.zgroup/.zmetadata) and the v3 group
+# metadata file (zarr.json) are filtered.
 nodots <- function(x) {
-  x[!grepl("\\.zattrs|\\.zgroup|\\.zmetadata", x)]
+  x[!grepl("\\.zattrs|\\.zgroup|\\.zmetadata|^zarr\\.json$", x)]
 }
 
 # pull out the `_ARRAY_DIMENSIONS` xarray convention
@@ -39,7 +41,18 @@ get_array_dims <- function(z, x, include_size = TRUE) {
 
     x <- z$get_item(x)
 
-    out <- list(name = as.character(x$get_attrs()$to_list()$`_ARRAY_DIMENSIONS`))
+    # v3 / NZ-1.0: dimension_names live in zarr.json and are exposed by
+    # pizzarr (>= 0.1.3) via ZarrArray$get_dimension_names(). Returns
+    # NULL for v2 arrays. When a v3 array carries both dimension_names
+    # and a stale _ARRAY_DIMENSIONS attribute, NZ-1.0 says
+    # dimension_names wins, so we check it first.
+    dim_names <- x$get_dimension_names()
+
+    if(is.null(dim_names)) {
+      dim_names <- x$get_attrs()$to_list()$`_ARRAY_DIMENSIONS`
+    }
+
+    out <- list(name = as.character(dim_names))
 
     if(include_size) {
 
@@ -144,7 +157,14 @@ get_attributes <- function(z, var_name = NULL, noarray = FALSE) {
   }
 
   if(noarray) {
-    out <- out[names(out) != "_ARRAY_DIMENSIONS"]
+    # Hide structural / annotation attributes from user-visible listings:
+    #   `_ARRAY_DIMENSIONS` is the v2/xarray dimension-name carrier (NZ-1.0
+    #   moves this into `dimension_names` in zarr.json on v3) and is not a
+    #   user attribute under either the NUG or NZ.
+    #   `_nczarr_attr` carries NCZarr's per-attribute type annotations and
+    #   is consulted by `inq_att()` for precise types but is not itself a
+    #   user-visible NUG attribute.
+    out <- out[!names(out) %in% c("_ARRAY_DIMENSIONS", "_nczarr_attr")]
   }
 
   out
@@ -166,11 +186,19 @@ att_prep <- function(z, var, att) {
 
   stopifnot(is.numeric(var), length(var) == 1, as.integer(var) == var)
 
+  # `atts` is the user-visible attribute set (NUG semantics: structural
+  # `_ARRAY_DIMENSIONS` and the `_nczarr_attr` annotation block are
+  # filtered out by `noarray = TRUE`).
   atts <- get_attributes(z, var, noarray = TRUE)
+  # `_nczarr_attr$types` is the NCZarr per-attribute dtype annotation
+  # (e.g. `scale_factor = "<f4"`). It is fetched here so `inq_att()` can
+  # report the precise on-disk type rather than the R runtime class that
+  # JSON deserialization collapses to (`numeric` / `integer`).
+  nczarr_types <- get_attributes(z, var, noarray = FALSE)$`_nczarr_attr`$types
 
   if(att + 1 > length(atts)) stop("Index is greater than number of attributes. Zero index issue?")
 
-  list(atts = atts, var = var, att = att)
+  list(atts = atts, var = var, att = att, nczarr_types = nczarr_types)
 }
 
 
@@ -187,3 +215,29 @@ var_prep <- function(z, var) {
 z_seq <- function(x) seq_len(x) - 1
 
 rm_na <- function(x) x[!is.na(x)]
+
+# Internal: does the root group of a ZarrGroup declare NZ-1.0 compliance?
+# NZ-1.0 \S Conventions allows `conventions` (NZ-preferred, lowercase) and
+# treats the NUG-style `Conventions` (capital C) as equivalent on read, so
+# we check both keys. Used by other Zarr-backend code paths that need to
+# branch on convention compliance (e.g. strict NZ semantics for fill-value
+# fallback). Not exported and not S3 - callers always hold a ZarrGroup.
+is_nz <- function(z) {
+  atts <- z$get_attrs()$to_list()
+  conv <- atts$conventions
+  if(is.null(conv)) conv <- atts$Conventions
+
+  has_nz(conv)
+}
+
+# Internal: parse a convention attribute value (a single string of
+# space-separated convention tokens, per NUG \S6.1.2 / NZ \S Conventions)
+# and report whether `"NZ-1.0"` is one of the tokens. Returns FALSE for
+# NULL / empty / non-character input so callers don't have to guard.
+has_nz <- function(conv) {
+  if(is.null(conv) || length(conv) == 0) return(FALSE)
+  if(!is.character(conv)) return(FALSE)
+
+  tokens <- unlist(strsplit(conv, "\\s+"))
+  "NZ-1.0" %in% tokens
+}

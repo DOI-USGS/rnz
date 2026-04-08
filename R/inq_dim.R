@@ -1,6 +1,8 @@
 #' @title Inquire Zarr Dimension
 #' @description
-#' NOTE: assumes the `_ARRAY_DIMENSION` convention from `xarray`
+#' NOTE: for Zarr v2 stores, reads the `_ARRAY_DIMENSIONS` xarray
+#' attribute; for Zarr v3 / NZ-1.0 stores, reads `dimension_names`
+#' from `zarr.json` via `pizzarr::ZarrArray$get_dimension_names()`.
 #'
 #' @inheritParams inq_nz_source
 #' @param dim integer zero-based index id of dimension of interest

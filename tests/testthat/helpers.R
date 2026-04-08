@@ -133,3 +133,22 @@ make_v2_dimcount_fixture <- function() {
 
   r
 }
+
+# v2 in-memory fixture: a 2x3 dimensioned array `v(x, y)` plus a scalar
+# array `s` (`shape: integer(0)`, `_ARRAY_DIMENSIONS: list()`). Pins
+# NZ-1.0 scalar-array support: a 0-rank array must round-trip through
+# inq_nz_source / inq_var / get_var / nzdump without erroring and must
+# not contribute spurious entries to the dimension count.
+make_v2_scalar_fixture <- function() {
+  s <- pizzarr::MemoryStore$new()
+  r <- pizzarr::zarr_create_group(store = s)
+
+  v <- array(as.double(1:6), dim = c(2, 3))
+  r$create_dataset("v", data = v, shape = dim(v))
+  r$get_item("v")$get_attrs()$set_item("_ARRAY_DIMENSIONS", list("x", "y"))
+
+  r$create_dataset("s", data = 42, shape = integer(0))
+  r$get_item("s")$get_attrs()$set_item("_ARRAY_DIMENSIONS", list())
+
+  r
+}
