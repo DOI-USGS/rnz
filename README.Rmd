@@ -15,7 +15,7 @@
 
 # rnz <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
-[![codecov](https://codecov.io/github/doi-usgs/rnz/graph/badge.svg)](https://codecov.io/github/doi-usgs/rnz)
+[![R-CMD-check](https://github.com/DOI-USGS/rnz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DOI-USGS/rnz/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/github/doi-usgs/rnz/graph/badge.svg)](https://codecov.io/github/doi-usgs/rnz)
 
 `rnz` provides one RNetCDF-shaped inquiry and read API — `open_nz`, `inq_dim`, `inq_var`, `get_var`, `get_att`, `nzdump` — that returns the same shapes whether the source is a NetCDF file or a Zarr store. NetCDF access is delegated to [`RNetCDF`](https://cran.r-project.org/package=RNetCDF); Zarr access is delegated to [`pizzarr`](https://github.com/keller-mark/pizzarr). Code written against `rnz` does not branch on which backend is in use.
 
