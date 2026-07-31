@@ -22,7 +22,7 @@
 #' }
 #' @name close_nz
 #' @export
-close_nz <- function(nz) {
+close_nz <- function(z) {
   UseMethod("close_nz")
 }
 

@@ -137,12 +137,18 @@ get_rep_var <- function(z, dim_name) {
 
   all_var_dims <- get_all_dims(z)
 
-  # if there is a coordinate variable, return it
-  if(any(names(all_var_dims) == dim_name))
-    return(all_var_dims[names(all_var_dims) == dim_name][[1]]$name)
+  # exact match on the dimension label. `grepl` would treat `dim_name` as a
+  # regex and match substrings, so a dimension named "lat" would pick up a
+  # variable on "latitude".
+  on_dim <- sapply(all_var_dims, \(x) any(x$name == dim_name))
+
+  # if there is a coordinate variable, return it. sharing a name with the
+  # dimension is not enough -- the variable must actually be on it,
+  # otherwise it is an unrelated variable that happens to share the name.
+  if(isTRUE(on_dim[dim_name])) return(dim_name)
 
   # otherwise return the first variable on that dimension
-  names(all_var_dims[sapply(all_var_dims, \(x) any(grepl(dim_name, x)))][1])
+  names(on_dim[on_dim][1])
 }
 
 get_attributes <- function(z, var_name = NULL, noarray = FALSE) {

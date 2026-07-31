@@ -66,7 +66,11 @@ open_nz.character <- function(nz, backend = NULL, warn = FALSE) {
     ret <- try_zarr(nz, warn)
   }
 
-  if(!is.null(backend) && backend == "RNetCDF" | inherits(ret, "try-error")) {
+  # only fall back to RNetCDF when no backend was requested. an explicit
+  # backend is honored, so `backend = "pizzarr"` returns the try-error
+  # rather than quietly handing back a NetCDF handle.
+  if((!is.null(backend) && backend == "RNetCDF") ||
+     (is.null(backend) && inherits(ret, "try-error"))) {
     ret <- try(RNetCDF::open.nc(nz), silent = !warn)
 
     if(!inherits(ret, "try-error") & is.null(backend) & warn) {

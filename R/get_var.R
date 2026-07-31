@@ -10,6 +10,9 @@
 #' be NA if start is not NA. NA count in one or more dimensions can be used to
 #' indicate all of a given dimension.
 #' @param collapse logical if TRUE degenerated dimensions (length=1) will be omitted.
+#' @param unpack logical if TRUE and the variable carries `scale_factor` and/or
+#' `add_offset` attributes, the returned values are unpacked as
+#' `(value * scale_factor) + add_offset`.
 #' @param ... passed to RNetCDF var.get.nc
 #' @return array of data
 #' @examples
@@ -64,7 +67,8 @@ get_var <- function(z, var, start = NA, count = NA,
 #' @export
 get_var.character <- function(z, var, start = NA, count = NA,
                               collapse = TRUE, unpack = FALSE, ...) {
-  get_var(open_nz(z, warn = FALSE), var, start, count, collapse = collapse, ...)
+  get_var(open_nz(z, warn = FALSE), var, start, count, collapse = collapse,
+          unpack = unpack, ...)
 }
 
 #' @name get_var

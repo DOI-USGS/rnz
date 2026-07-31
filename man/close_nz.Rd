@@ -8,7 +8,7 @@
 \title{close netcdf or zarr
 Closes handle. Doesn't currently do anything for zarr stores.}
 \usage{
-close_nz(nz)
+close_nz(z)
 
 \method{close_nz}{NetCDF}(z)
 

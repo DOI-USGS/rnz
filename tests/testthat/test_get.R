@@ -185,3 +185,21 @@ test_that("scale offset", {
                aperm((get_var(z, "pr", unpack = TRUE) - 100) * 10,
                      c(3, 2, 1)))
 })
+
+test_that("get_var passes unpack through the character method", {
+  skip_if_not_installed("pizzarr")
+
+  p <- make_v2_packed_path_fixture(file.path(tempdir(), "packed.zarr"))
+  on.exit(unlink(p, recursive = TRUE))
+
+  packed <- as.double(1:6)
+
+  # the character method opens the path then re-dispatches; `unpack` has to
+  # survive that hop.
+  expect_equal(as.vector(get_var(p, "v")), packed)
+  expect_equal(as.vector(get_var(p, "v", unpack = TRUE)), packed * 10 + 100)
+
+  # and it must agree with the ZarrGroup method
+  expect_equal(get_var(p, "v", unpack = TRUE),
+               get_var(open_nz(p), "v", unpack = TRUE))
+})

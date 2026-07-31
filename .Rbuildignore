@@ -14,3 +14,4 @@ inst/extdata/bcsd.zarr
 CLAUDE.md
 CONTEXT.md
 TODO.md
+^\.claude$

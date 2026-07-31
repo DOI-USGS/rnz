@@ -87,7 +87,40 @@ test_that("utils", {
 
   test_fun(zarr_test)
 
+  # the consolidated fixture is a remote http store -- see helpers.R
+  skip_if_not_installed("crul")
   skip_on_ci()
+  skip_on_cran()
   test_fun(zarr_consolidated)
+
+})
+
+test_that("get_rep_var matches dimension labels exactly", {
+
+  skip_if_not_installed("pizzarr")
+
+  # "lat" is a prefix of "latitude"; only `b` is on "lat".
+  z <- make_v2_dim_named_fixture(list(a = "latitude", b = "lat"))
+
+  expect_equal(get_rep_var(z, "lat"), "b")
+  expect_equal(get_rep_var(z, "latitude"), "a")
+
+  # "." must not behave as a regex wildcard: only `b` is on "a.b".
+  z <- make_v2_dim_named_fixture(list(a = "axb", b = "a.b"))
+
+  expect_equal(get_rep_var(z, "a.b"), "b")
+
+  # a variable sharing a name with a dimension is only the coordinate
+  # variable if it is actually on that dimension. here `time` is on "t",
+  # so the representative variable for "time" is `data`.
+  z <- make_v2_dim_named_fixture(list(data = c("time", "y"), time = "t"))
+
+  expect_equal(get_rep_var(z, "time"), "data")
+  expect_equal(inq_dim(z, "time")$length, 2L)
+
+  # a genuine coordinate variable still wins
+  z <- make_v2_dim_named_fixture(list(data = c("time", "y"), time = "time"))
+
+  expect_equal(get_rep_var(z, "time"), "time")
 
 })

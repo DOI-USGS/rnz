@@ -18,10 +18,25 @@ test_that("open example", {
   expect_null(open_nz(NULL))
 })
 
+test_that("an explicit backend is not silently overridden", {
+  skip_if_not_installed("pizzarr")
+  skip_if_not_installed("RNetCDF")
+
+  # a NetCDF file is not a zarr store. asking for pizzarr explicitly must
+  # surface the failure rather than quietly falling back to RNetCDF.
+  expect_s3_class(open_nz(nc_file, backend = "pizzarr"), "try-error")
+
+  # the default (backend = NULL) still falls back
+  expect_equal(class(open_nz(nc_file)), "NetCDF")
+})
+
 test_that("open http", {
   skip_if_not_installed("pizzarr")
+  # pizzarr's HttpStore needs crul; without it every remote store fails.
+  skip_if_not_installed("crul")
 
   skip_on_ci()
+  skip_on_cran()
 
   url <- "https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr/"
 

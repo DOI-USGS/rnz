@@ -32,7 +32,7 @@ oldoption <- options(scipen = 9999)
 
 # Getting started with `rnz`
 
-`rnz` exposes one RNetCDF-shaped API over both NetCDF files (via [`RNetCDF`](https://cran.r-project.org/package=RNetCDF)) and Zarr stores (via [`pizzarr`](https://github.com/keller-mark/pizzarr)). On the Zarr side it follows the [NZ-1.0 convention](https://github.com/zarr-conventions/nz/) — the structural bridge from Zarr v3 to [NUG](https://docs.unidata.ucar.edu/nug/current/)-compatible semantics — and remains backward compatible with Zarr v2 stores using xarray's `_ARRAY_DIMENSIONS` attribute. The [package README](../index.html) carries the longer framing; this vignette walks the inquiry and read functions side-by-side on a single dataset in both its NetCDF and Zarr forms, so the two backends can be compared call-for-call.
+`rnz` exposes one RNetCDF-shaped API over both NetCDF files (via [`RNetCDF`](https://cran.r-project.org/package=RNetCDF)) and Zarr stores (via [`pizzarr`](https://github.com/keller-mark/pizzarr)). On the Zarr side it follows the [NZ-1.0 convention](https://github.com/zarr-conventions/nz/) — the structural bridge from Zarr v3 to [NUG](https://docs.unidata.ucar.edu/nug/current/)-compatible semantics — and remains backward compatible with Zarr v2 stores using xarray's `_ARRAY_DIMENSIONS` attribute. The [package README](https://github.com/DOI-USGS/rnz) carries the longer framing; this vignette walks the inquiry and read functions side-by-side on a single dataset in both its NetCDF and Zarr forms, so the two backends can be compared call-for-call.
 
 The demo dataset is derived from <https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/> and is bundled in both NetCDF and Zarr form.
 

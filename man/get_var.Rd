@@ -34,6 +34,10 @@ indicate all of a given dimension.}
 
 \item{collapse}{logical if TRUE degenerated dimensions (length=1) will be omitted.}
 
+\item{unpack}{logical if TRUE and the variable carries `scale_factor` and/or
+`add_offset` attributes, the returned values are unpacked as
+`(value * scale_factor) + add_offset`.}
+
 \item{...}{passed to RNetCDF var.get.nc}
 }
 \value{

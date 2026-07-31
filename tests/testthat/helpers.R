@@ -1,7 +1,16 @@
 z_path <- z_demo()
 
 if(requireNamespace("pizzarr", quietly = TRUE)) {
-  zarr_consolidated <- open_nz("https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr")
+  # The consolidated-metadata fixture is a remote http store. Only reach for
+  # it under the same conditions its tests run under: pizzarr's HttpStore
+  # needs crul, and CRAN checks must not touch the network. Tests that use
+  # `zarr_consolidated` guard with skip_if_not_installed("crul") and
+  # skip_on_cran(), so it is fine for this to stay unset.
+  if(requireNamespace("crul", quietly = TRUE) &&
+     identical(Sys.getenv("NOT_CRAN"), "true")) {
+    zarr_consolidated <- open_nz("https://raw.githubusercontent.com/DOI-USGS/rnz/main/inst/extdata/bcsd.zarr")
+  }
+
   zarr_test <- open_nz(z_path)
 }
 
@@ -113,6 +122,42 @@ make_v2_conventions_fixture <- function(conv_string, key = "conventions") {
   r$get_attrs()$set_item(key, conv_string)
 
   r
+}
+
+# v2 in-memory fixture: builds a store from a name -> dimension-labels map,
+# e.g. `list(a = "latitude", b = "lat")`. Used to pin exact (non-regex)
+# dimension-label matching in get_rep_var.
+make_v2_dim_named_fixture <- function(spec) {
+  s <- pizzarr::MemoryStore$new()
+  r <- pizzarr::zarr_create_group(store = s)
+
+  for (nm in names(spec)) {
+    shp <- rep(2L, length(spec[[nm]]))
+    r$create_dataset(nm, data = array(as.double(1:prod(shp)), dim = shp),
+                     shape = shp)
+    r$get_item(nm)$get_attrs()$set_item("_ARRAY_DIMENSIONS",
+                                        as.list(spec[[nm]]))
+  }
+
+  r
+}
+
+# v2 on-disk fixture: a packed array carrying `scale_factor` / `add_offset`.
+# Returns the store path so the `character` method of get_var can be
+# exercised, which is where `unpack` was being dropped.
+make_v2_packed_path_fixture <- function(dir) {
+  s <- pizzarr::DirectoryStore$new(dir)
+  r <- pizzarr::zarr_create_group(store = s)
+
+  a <- array(as.double(1:6), dim = c(2, 3))
+  r$create_dataset("v", data = a, shape = dim(a))
+
+  atts <- r$get_item("v")$get_attrs()
+  atts$set_item("_ARRAY_DIMENSIONS", list("x", "y"))
+  atts$set_item("scale_factor", 10)
+  atts$set_item("add_offset", 100)
+
+  dir
 }
 
 # v2 in-memory fixture: two 2D arrays on disjoint dims (x,y) and (z,t).
