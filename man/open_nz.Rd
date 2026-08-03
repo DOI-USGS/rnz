@@ -18,7 +18,9 @@ open_nz(nz, backend = NULL, warn = FALSE)
 \arguments{
 \item{nz}{a pizzarr store, a path to a zarr store, a path to a netcdf
 resource, or an `s3://` or `gs://` URL. A cloud store is read through the
-pizzarr zarrs backend and must publish consolidated metadata. Connection
+pizzarr zarrs backend, in either Zarr v2 or v3, and must publish
+consolidated metadata: a `.zmetadata` key on v2, or a
+`consolidated_metadata` member of the root `zarr.json` on v3. Connection
 settings come from the environment: `AWS_ENDPOINT` for an S3-compatible
 endpoint, and `GOOGLE_SKIP_SIGNATURE=true` for anonymous access to a
 public Google Cloud Storage bucket.}

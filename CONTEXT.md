@@ -108,6 +108,15 @@ One file per inquiry concept, mirroring `RNetCDF`:
   `get_array_dims`, `get_unique_dims`, `get_rep_var`, `var_prep`,
   `att_prep`, `z_seq`, `nodots`, `z_demo`. **Read this first** when
   touching the Zarr backend; nearly every method depends on it.
+- [`R/cloud_source.R`](R/cloud_source.R) — the `s3://` / `gs://` adapter.
+  pizzarr's `S3Store` / `GcsStore` are dispatch markers with no key-level
+  I/O, so this builds the slice of the `ZarrGroup` surface `util.R` needs
+  out of one consolidated metadata document, fetched with
+  `pizzarr::zarrs_get_key()` and read with `pizzarr::zarrs_get_subset()`.
+  Handles v2 (`.zmetadata`) and v3 (`consolidated_metadata` in the root
+  `zarr.json`), normalizing both into one per-array record so the version
+  difference stays in that file. zarrs also opens plain filesystem paths,
+  which is how the adapter is tested offline against pizzarr's own reader.
 - [`R/close.R`](R/close.R) — close handles.
 
 ## API conventions (RNetCDF parity)

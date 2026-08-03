@@ -254,7 +254,9 @@ rnz::get_var(z_gs, "basin_mask", start = c(1, 1, 1), count = c(2, 3, 4))
 rnz::close_nz(z_gs)
 ```
 
-Two limits are worth stating plainly. The `s3://` and `gs://` routes need the r-universe pizzarr build, which compiles the zarrs Rust backend with cloud support; the CRAN build is pure R and cannot take them. And rnz can only inquire a cloud store that publishes consolidated metadata — a `.zmetadata` key holding every array's metadata in one document — because the object store APIs offer no way to list a store's contents. Both stores above publish it, which is why the calls can find the variables without being told their names. Where neither holds, most of these services also serve their objects over plain HTTPS, and that address works with no configuration at all:
+Both stores above are Zarr v2, but nothing in the calls depends on that. A v3 store reached the same way behaves identically, because the two versions differ only in where they put the information rnz reads: v2 labels dimensions with an `_ARRAY_DIMENSIONS` attribute, while v3 gives them a `dimension_names` field of their own, and rnz prefers the latter where both appear.
+
+The `s3://` and `gs://` routes need the r-universe pizzarr build, which compiles the zarrs Rust backend with cloud support; the CRAN build is pure R and cannot take them. And rnz can only inquire a cloud store that publishes consolidated metadata — every array's metadata gathered into one document, which is a `.zmetadata` key on v2 and a `consolidated_metadata` member of the root `zarr.json` on v3 — because the object store APIs offer no way to list a store's contents. Both stores above publish it, which is why the calls can find the variables without being told their names. Where neither holds, most of these services also serve their objects over plain HTTPS, and that address works with no configuration at all:
 
 ```{r, eval = eval_http}
 z_http <- rnz::open_nz("https://usgs.osn.mghpcc.org/mdmf/gdp/gridMET.zarr")

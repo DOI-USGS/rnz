@@ -27,6 +27,182 @@ skip_unless_gcs <- function() {
   skip_on_ci()
 }
 
+skip_unless_zarrs <- function() {
+  skip_if_not_installed("pizzarr")
+  skip_if_not_installed("jsonlite")
+  skip_if(!have_zarrs(), "pizzarr zarrs backend not available")
+}
+
+# ---------------------------------------------------------------------------
+# Offline format parity, v2 and v3.
+#
+# zarrs opens filesystem paths through the same code as s3:// and gs://, so
+# these run the whole adapter against a local consolidated store with no
+# network. pizzarr reading the same store is the oracle: everything the
+# adapter derives from the one consolidated document has to agree with what
+# pizzarr derived from the individual metadata files.
+#
+# This is where format handling is pinned. The gridMET and ECCO tests below
+# pin transport.
+# ---------------------------------------------------------------------------
+
+expect_cloud_parity <- function(ref, ad, vars, ndims) {
+  expect_equal(inq_nz_source(ad), inq_nz_source(ref))
+  expect_equal(inq_grp(ad), inq_grp(ref))
+
+  # ids have to line up or every id-based call below compares different
+  # things
+  expect_equal(get_vars(ad), get_vars(ref))
+  expect_equal(get_unique_dims(ad), get_unique_dims(ref))
+  expect_equal(get_all_dims(ad), get_all_dims(ref))
+  expect_equal(get_dim_size(ad), get_dim_size(ref))
+
+  for (i in z_seq(ndims)) expect_equal(inq_dim(ad, i), inq_dim(ref, i))
+
+  for (v in vars) {
+    expect_equal(inq_var(ad, v), inq_var(ref, v))
+    expect_equal(get_attributes(ad, v), get_attributes(ref, v))
+  }
+
+  expect_equal(get_att(ad, -1, 0), get_att(ref, -1, 0))
+}
+
+expect_cloud_read_parity <- function(ref, ad) {
+  expect_equal(get_var(ad, "data"), get_var(ref, "data"))
+  expect_equal(get_var(ad, "t"), get_var(ref, "t"))
+
+  # a 1D array cannot expose a transposed axis order, and an offset start
+  # cannot be confused with a zero start
+  expect_equal(get_var(ad, "data", c(1, 1, 1), c(2, 2, 3)),
+               get_var(ref, "data", c(1, 1, 1), c(2, 2, 3)))
+
+  expect_equal(get_var(ad, "data", c(1, 2, 3), c(2, 2, 3)),
+               get_var(ref, "data", c(1, 2, 3), c(2, 2, 3)))
+
+  expect_equal(get_var(ad, "data", c(1, 1, 1), c(2, 2, 3), unpack = TRUE),
+               get_var(ref, "data", c(1, 1, 1), c(2, 2, 3), unpack = TRUE))
+
+  # `_FillValue` masking, which reads the attribute rather than the
+  # storage-level fill_value
+  expect_true(is.nan(get_var(ad, "data")[1, 1, 1]))
+}
+
+test_that("the adapter matches pizzarr on a consolidated v3 store", {
+  skip_unless_zarrs()
+
+  dir <- make_v3_cloud_fixture(file.path(withr::local_tempdir(), "v3.zarr"))
+
+  ref <- open_nz(dir)
+  ad <- nz_cloud_group(dir)
+
+  expect_equal(ad$get_zarr_format(), 3L)
+  expect_s3_class(ad, "NZCloud")
+
+  expect_cloud_parity(ref, ad, c("data", "x", "y", "t"), 3)
+  expect_cloud_read_parity(ref, ad)
+})
+
+test_that("the adapter matches pizzarr on a consolidated v2 store", {
+  skip_unless_zarrs()
+
+  dir <- make_v2_cloud_fixture(file.path(withr::local_tempdir(), "v2.zarr"))
+
+  ref <- open_nz(dir)
+  ad <- nz_cloud_group(dir)
+
+  expect_equal(ad$get_zarr_format(), 2L)
+
+  expect_cloud_parity(ref, ad, c("data", "x", "y", "t"), 3)
+  expect_cloud_read_parity(ref, ad)
+})
+
+test_that("v3 dimension labels come from dimension_names", {
+  skip_unless_zarrs()
+
+  dir <- make_v3_cloud_fixture(file.path(withr::local_tempdir(), "v3.zarr"))
+
+  ad <- nz_cloud_group(dir)
+
+  # nothing in a v3 store carries the v2 attribute, so resolving dimensions
+  # at all proves dimension_names is the source
+  expect_false(any(grepl("_ARRAY_DIMENSIONS",
+                         readLines(file.path(dir, "zarr.json"),
+                                   warn = FALSE))))
+
+  expect_equal(get_unique_dims(ad), c("x", "y", "t"))
+  expect_equal(get_all_dims(ad)$data$name, c("x", "y", "t"))
+  expect_equal(inq_var(ad, "data")$dimids, 0:2)
+
+  # and the attribute listing stays clean
+  expect_false("_ARRAY_DIMENSIONS" %in% names(get_attributes(ad, "data")))
+})
+
+test_that("v3 dtypes and byte order match what pizzarr reports", {
+  skip_unless_zarrs()
+
+  dir <- make_v3_dtype_fixture(file.path(withr::local_tempdir(), "dt.zarr"))
+
+  ref <- open_nz(dir)
+  ad <- nz_cloud_group(dir)
+
+  for (v in c("f4", "f8", "i4", "i2", "i1")) {
+    expect_equal(inq_var(ad, v)$type, inq_var(ref, v)$type)
+  }
+
+  expect_equal(inq_var(ad, "f4")$type, ">f4")
+  expect_equal(inq_var(ad, "f8")$type, "<f8")
+  expect_equal(inq_var(ad, "i1")$type, "|i1")
+})
+
+test_that("nz_v3_dtype maps the v3 type set", {
+  expect_equal(nz_v3_dtype("float32"), "<f4")
+  expect_equal(nz_v3_dtype("float32", "big"), ">f4")
+  expect_equal(nz_v3_dtype("int16", "big"), ">i2")
+  expect_equal(nz_v3_dtype("uint32"), "<u4")
+  expect_equal(nz_v3_dtype("int64"), "<i8")
+
+  # single-byte types carry no byte order regardless of what is asked for
+  expect_equal(nz_v3_dtype("bool", "big"), "|b1")
+  expect_equal(nz_v3_dtype("int8"), "|i1")
+  expect_equal(nz_v3_dtype("uint8", "big"), "|u1")
+
+  expect_error(nz_v3_dtype("complex64"), "unsupported v3 data_type")
+})
+
+test_that("nz_v3_endian reads the array-to-bytes codec", {
+  big <- list(list(name = "bytes", configuration = list(endian = "big")))
+  zarrita <- list(list(name = "endian", configuration = list(endian = "big")))
+
+  expect_equal(nz_v3_endian(big), "big")
+  expect_equal(nz_v3_endian(zarrita), "big")
+
+  # v3 defaults to little when the codec is absent or carries no
+  # configuration, which is what pizzarr writes for single-byte types
+  expect_equal(nz_v3_endian(list(list(name = "bytes"))), "little")
+  expect_equal(nz_v3_endian(list(list(name = "zstd"))), "little")
+  expect_equal(nz_v3_endian(list()), "little")
+})
+
+test_that("an unconsolidated v3 store errors clearly", {
+  skip_unless_zarrs()
+
+  dir <- file.path(withr::local_tempdir(), "bare.zarr")
+
+  s <- pizzarr::DirectoryStore$new(dir)
+  r <- pizzarr::zarr_create_group(store = s, zarr_format = 3L)
+  r$create_dataset("v", data = array(as.double(1:6), dim = c(2, 3)),
+                   shape = c(2, 3), dimension_names = c("x", "y"))
+
+  expect_error(nz_cloud_group(dir), "does not consolidate its metadata")
+})
+
+test_that("a store with neither metadata document errors clearly", {
+  skip_unless_zarrs()
+
+  expect_error(nz_cloud_group(withr::local_tempdir()),
+               "no consolidated metadata found")
+})
+
 # ---------------------------------------------------------------------------
 # s3://
 # ---------------------------------------------------------------------------

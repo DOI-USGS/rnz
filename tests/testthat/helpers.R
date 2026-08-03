@@ -54,6 +54,166 @@ have_cloud <- function(feature) {
 have_s3 <- function() have_cloud("s3")
 have_gcs <- function() have_cloud("gcs")
 
+# The cloud adapter itself only needs the zarrs backend and a store it can
+# reach. zarrs opens plain filesystem paths through the same code path as
+# s3:// and gs://, so the offline fixtures below need no cloud feature.
+have_zarrs <- function() {
+  requireNamespace("pizzarr", quietly = TRUE) &&
+    requireNamespace("jsonlite", quietly = TRUE) &&
+    exists("zarrs_get_key", envir = asNamespace("pizzarr")) &&
+    "filesystem" %in% tryCatch(pizzarr::pizzarr_compiled_features(),
+                               error = function(e) character(0))
+}
+
+# ---------------------------------------------------------------------------
+# Offline cloud-adapter fixtures.
+#
+# Pointing nz_cloud_group() at a local store exercises the whole adapter --
+# metadata fetch through zarrs_get_key(), parsing, and reads through
+# zarrs_get_subset() -- with no network, and pizzarr reading the same store
+# is the oracle. That covers format handling; the gridMET and ECCO tests
+# cover transport.
+#
+# pizzarr cannot write consolidated metadata, so these builders add it. v3
+# inlines every child's zarr.json under `consolidated_metadata` in the root
+# zarr.json, matching zarr-python's flat layout. v2 writes a `.zmetadata`
+# key holding every `.zarray` and `.zattrs`.
+# ---------------------------------------------------------------------------
+
+read_json_file <- function(path) {
+  jsonlite::fromJSON(paste(readLines(path, warn = FALSE), collapse = "\n"),
+                     simplifyVector = FALSE)
+}
+
+write_json_file <- function(x, path) {
+  writeLines(jsonlite::toJSON(x, auto_unbox = TRUE, digits = NA,
+                              null = "null"), path)
+}
+
+consolidate_v3 <- function(dir) {
+  root <- read_json_file(file.path(dir, "zarr.json"))
+
+  nodes <- list()
+
+  for(nm in list.dirs(dir, full.names = FALSE, recursive = FALSE)) {
+    f <- file.path(dir, nm, "zarr.json")
+    if(file.exists(f)) nodes[[nm]] <- read_json_file(f)
+  }
+
+  root$consolidated_metadata <- list(kind = "inline",
+                                     must_understand = FALSE,
+                                     metadata = nodes)
+
+  write_json_file(root, file.path(dir, "zarr.json"))
+
+  dir
+}
+
+consolidate_v2 <- function(dir) {
+  keys <- gsub("\\\\", "/", list.files(dir, recursive = TRUE,
+                                       all.files = TRUE))
+  keys <- keys[basename(keys) %in% c(".zarray", ".zattrs", ".zgroup")]
+
+  nodes <- list()
+
+  for(k in keys) nodes[[k]] <- read_json_file(file.path(dir, k))
+
+  write_json_file(list(zarr_consolidated_format = 1, metadata = nodes),
+                  file.path(dir, ".zmetadata"))
+
+  dir
+}
+
+# A consolidated v3 store: a 3D array on (x, y, t) plus a coordinate array
+# per dimension, carrying group attributes, variable attributes, a
+# `_FillValue`, and packing attributes. Returns the store path.
+make_v3_cloud_fixture <- function(dir) {
+  s <- pizzarr::DirectoryStore$new(dir)
+  r <- pizzarr::zarr_create_group(store = s, zarr_format = 3L)
+
+  d <- array(as.double(1:30), dim = c(2, 3, 5))
+  d[1, 1, 1] <- -999
+
+  r$create_dataset("data", data = d, shape = dim(d),
+                   dimension_names = c("x", "y", "t"))
+
+  for(nm in c("x", "y", "t")) {
+    n <- c(x = 2, y = 3, t = 5)[[nm]]
+    r$create_dataset(nm, data = array(as.double(seq_len(n)), dim = n),
+                     shape = n, dimension_names = nm)
+  }
+
+  atts <- r$get_item("data")$get_attrs()
+  atts$set_item("units", "mm")
+  atts$set_item("long_name", "test data")
+  atts$set_item("_FillValue", -999)
+  atts$set_item("scale_factor", 10)
+  atts$set_item("add_offset", 100)
+
+  r$get_item("x")$get_attrs()$set_item("units", "degrees_east")
+  r$get_item("t")$get_attrs()$set_item("units", "days since 1999-01-01")
+
+  r$get_attrs()$set_item("conventions", "NZ-1.0")
+  r$get_attrs()$set_item("title", "v3 cloud fixture")
+
+  consolidate_v3(dir)
+}
+
+# A consolidated v3 store covering the dtype and byte-order mapping. v3
+# stores a type name plus a `bytes` codec carrying byte order, and the
+# adapter has to rebuild the numpy-style string pizzarr itself reports.
+# Single-byte types get a `bytes` codec with no configuration at all.
+make_v3_dtype_fixture <- function(dir) {
+  s <- pizzarr::DirectoryStore$new(dir)
+  r <- pizzarr::zarr_create_group(store = s, zarr_format = 3L)
+
+  for(dt in c(">f4", "<f8", ">i4", "<i2", "|i1")) {
+    r$create_dataset(gsub("[<>|]", "", dt),
+                     data = array(as.double(1:6), dim = c(2, 3)),
+                     shape = c(2, 3), dtype = dt,
+                     dimension_names = c("a", "b"))
+  }
+
+  consolidate_v3(dir)
+}
+
+# The same dataset as a consolidated v2 store, so the v2 branch of the
+# adapter is regression-covered offline too. Dimension labels go in
+# `_ARRAY_DIMENSIONS` rather than `dimension_names`.
+make_v2_cloud_fixture <- function(dir) {
+  s <- pizzarr::DirectoryStore$new(dir)
+  r <- pizzarr::zarr_create_group(store = s)
+
+  d <- array(as.double(1:30), dim = c(2, 3, 5))
+  d[1, 1, 1] <- -999
+
+  r$create_dataset("data", data = d, shape = dim(d))
+  r$get_item("data")$get_attrs()$set_item("_ARRAY_DIMENSIONS",
+                                          list("x", "y", "t"))
+
+  for(nm in c("x", "y", "t")) {
+    n <- c(x = 2, y = 3, t = 5)[[nm]]
+    r$create_dataset(nm, data = array(as.double(seq_len(n)), dim = n),
+                     shape = n)
+    r$get_item(nm)$get_attrs()$set_item("_ARRAY_DIMENSIONS", list(nm))
+  }
+
+  atts <- r$get_item("data")$get_attrs()
+  atts$set_item("units", "mm")
+  atts$set_item("long_name", "test data")
+  atts$set_item("_FillValue", -999)
+  atts$set_item("scale_factor", 10)
+  atts$set_item("add_offset", 100)
+
+  r$get_item("x")$get_attrs()$set_item("units", "degrees_east")
+  r$get_item("t")$get_attrs()$set_item("units", "days since 1999-01-01")
+
+  r$get_attrs()$set_item("conventions", "NZ-1.0")
+  r$get_attrs()$set_item("title", "v2 cloud fixture")
+
+  consolidate_v2(dir)
+}
+
 # ---------------------------------------------------------------------------
 # Fixture builders for the NZ-1.0 / v3 TDD scaffold (test_nz_v3.R).
 # All builders return a ZarrGroup backed by an in-memory MemoryStore.
