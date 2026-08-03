@@ -1,5 +1,10 @@
 #' @title open netcdf or zarr
-#' @param nz a pizzarr store, a path to a zarr store, or a path to a netcdf resource
+#' @param nz a pizzarr store, a path to a zarr store, a path to a netcdf
+#'  resource, or an `s3://` or `gs://` URL. A cloud store is read through the
+#'  pizzarr zarrs backend and must publish consolidated metadata. Connection
+#'  settings come from the environment: `AWS_ENDPOINT` for an S3-compatible
+#'  endpoint, and `GOOGLE_SKIP_SIGNATURE=true` for anonymous access to a
+#'  public Google Cloud Storage bucket.
 #' @param backend character "pizzarr" or "RNetCDF"
 #'  if NULL (the default) will try pizzar first and fall back to RNetCDF
 #' @param warn logical warn or no warn?
@@ -61,6 +66,21 @@ open_nz.character <- function(nz, backend = NULL, warn = FALSE) {
   if(!is.null(backend) && !backend %in% c("pizzarr", "RNetCDF")) stop("'backend' must be NULL, \"pizzarr\", or \"RNetCDF\"")
 
   ret <- NULL
+
+  # Cloud stores can't go through pizzarr::zarr_open() -- it resolves them to
+  # an S3Store or GcsStore, neither of which has key-level I/O.
+  # See R/cloud_source.R.
+  if(grepl(nz_cloud_schemes, nz)) {
+    if(!is.null(backend) && backend == "RNetCDF")
+      stop("'backend' must be \"pizzarr\" for a cloud store")
+
+    ret <- try(nz_cloud_group(nz), silent = !warn)
+
+    if(warn && inherits(ret, "try-error")) warning("Failed to open as zarr",
+                                                   immediate. = TRUE)
+
+    return(invisible(ret))
+  }
 
   if(is.null(backend) || backend == "pizzarr") {
     ret <- try_zarr(nz, warn)

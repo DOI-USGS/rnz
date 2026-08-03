@@ -45,6 +45,18 @@ close_nz.ZarrGroup <- function(z) {
 
 #' @name close_nz
 #' @export
+close_nz.NZCloud <- function(z) {
+
+  # zarrs caches store handles by URL on the Rust side, so changed
+  # connection settings have no effect until the handle is dropped.
+  pizzarr::zarrs_close_store(z$get_url())
+
+  invisible(z)
+
+}
+
+#' @name close_nz
+#' @export
 close_nz.NULL <- function(z) {
 
   NULL

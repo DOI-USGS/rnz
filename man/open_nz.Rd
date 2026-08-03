@@ -16,7 +16,12 @@ open_nz(nz, backend = NULL, warn = FALSE)
 \method{open_nz}{`NULL`}(nz, backend = NULL, warn = FALSE)
 }
 \arguments{
-\item{nz}{a pizzarr store, a path to a zarr store, or a path to a netcdf resource}
+\item{nz}{a pizzarr store, a path to a zarr store, a path to a netcdf
+resource, or an `s3://` or `gs://` URL. A cloud store is read through the
+pizzarr zarrs backend and must publish consolidated metadata. Connection
+settings come from the environment: `AWS_ENDPOINT` for an S3-compatible
+endpoint, and `GOOGLE_SKIP_SIGNATURE=true` for anonymous access to a
+public Google Cloud Storage bucket.}
 
 \item{backend}{character "pizzarr" or "RNetCDF"
 if NULL (the default) will try pizzar first and fall back to RNetCDF}

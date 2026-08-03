@@ -28,6 +28,42 @@ knitr::opts_chunk$set(
 )
 
 oldoption <- options(scipen = 9999)
+
+# The cloud section needs the r-universe pizzarr build -- the zarrs backend
+# with the `s3` or `gcs` feature compiled in, and `zarrs_get_key()` from
+# pizzarr 0.2.1 -- plus network access. Its chunks show as unevaluated code
+# without them.
+have_cloud <- function(feature) {
+  requireNamespace("pizzarr", quietly = TRUE) &&
+    requireNamespace("jsonlite", quietly = TRUE) &&
+    exists("zarrs_get_key", envir = asNamespace("pizzarr")) &&
+    feature %in% tryCatch(pizzarr::pizzarr_compiled_features(),
+                          error = function(e) character(0))
+}
+
+have_s3 <- have_cloud("s3")
+have_gcs <- have_cloud("gcs")
+
+reachable <- function(u) {
+  tryCatch({
+    con <- url(u)
+    on.exit(try(close(con), silent = TRUE))
+    length(readLines(con, warn = FALSE)) > 0
+  }, error = function(e) FALSE, warning = function(w) FALSE)
+}
+
+online <- reachable(
+  "https://usgs.osn.mghpcc.org/mdmf/gdp/gridMET.zarr/.zmetadata")
+
+online_gs <- reachable(
+  "https://storage.googleapis.com/pangeo-data/ECCO_basins.zarr/.zmetadata")
+
+eval_s3 <- eval && have_s3 && online
+eval_gs <- eval && have_gcs && online_gs
+
+# gridMET is Blosc-compressed. Reading it through pizzarr's R code path
+# needs the blosc package; the s3:// path decodes in Rust and does not.
+eval_http <- eval && online && requireNamespace("blosc", quietly = TRUE)
 ```
 
 # Getting started with `rnz`
@@ -159,6 +195,73 @@ rnz::get_att(nc, 4, 1)
 
 rnz::get_att(z, 4, 3)
 ```
+## Remote and cloud stores
+
+Zarr was designed for data that sits in object storage rather than on a local disk, and most published Zarr stores are hosted that way. The calls above do not change when the data moves — `open_nz()` takes a URL as readily as a path, and everything downstream of it works on what the store reports rather than on where the store lives.
+
+Catalog entries for cloud-hosted data usually advertise a bucket address paired with an endpoint. [gridMET](https://www.climatologylab.org/gridmet.html), a daily gridded meteorology dataset for the continental United States, is republished by the USGS on an [Open Storage Network](https://www.openstoragenetwork.org/) pod and listed this way:
+
+```
+s3://mdmf/gdp/gridMET.zarr/    endpoint https://usgs.osn.mghpcc.org/
+```
+
+That pairing — a bucket URL plus a host that is not Amazon — is what sends most people looking for documentation. In rnz the endpoint is the one setting you need, and it comes from the environment rather than a function argument, because the underlying store handle is cached and shared across calls:
+
+```{r, eval = eval_s3}
+Sys.setenv(AWS_ENDPOINT = "https://usgs.osn.mghpcc.org")
+
+z_s3 <- rnz::open_nz("s3://mdmf/gdp/gridMET.zarr")
+
+rnz::inq_nz_source(z_s3)
+```
+
+Inquiry proceeds exactly as it did against the bundled demo data:
+
+```{r, eval = eval_s3}
+rnz::inq_dim(z_s3, 0)
+
+rnz::inq_var(z_s3, "precipitation_amount")
+
+rnz::inq_att(z_s3, "lat", "units")
+```
+
+Reading is the same call as well, with one thing to keep in mind. `precipitation_amount` is 17369 days by 585 rows by 1386 columns, stored in chunks of 2190 by 150 by 150. A chunk is the smallest unit the store will return, so asking for a single value still transfers the block that contains it. Slice along chunk boundaries and keep requests small in the finely chunked dimensions:
+
+```{r, eval = eval_s3}
+rnz::get_var(z_s3, "lat", start = 1, count = 5)
+
+rnz::get_var(z_s3, "precipitation_amount",
+             start = c(1, 1, 1), count = c(2, 3, 4))
+```
+
+Store handles are cached by URL, so a changed endpoint has no effect until the handle is dropped. `close_nz()` drops it:
+
+```{r, eval = eval_s3}
+rnz::close_nz(z_s3)
+```
+
+Google Cloud Storage works the same way, with one wrinkle: it has no anonymous mode by default, and a world-readable bucket will still fail without either credentials or an explicit instruction to skip signing. `GOOGLE_SKIP_SIGNATURE` is that instruction:
+
+```{r, eval = eval_gs}
+Sys.setenv(GOOGLE_SKIP_SIGNATURE = "true")
+
+z_gs <- rnz::open_nz("gs://pangeo-data/ECCO_basins.zarr")
+
+rnz::inq_var(z_gs, "basin_mask")
+
+rnz::get_var(z_gs, "basin_mask", start = c(1, 1, 1), count = c(2, 3, 4))
+
+rnz::close_nz(z_gs)
+```
+
+Two limits are worth stating plainly. The `s3://` and `gs://` routes need the r-universe pizzarr build, which compiles the zarrs Rust backend with cloud support; the CRAN build is pure R and cannot take them. And rnz can only inquire a cloud store that publishes consolidated metadata — a `.zmetadata` key holding every array's metadata in one document — because the object store APIs offer no way to list a store's contents. Both stores above publish it, which is why the calls can find the variables without being told their names. Where neither holds, most of these services also serve their objects over plain HTTPS, and that address works with no configuration at all:
+
+```{r, eval = eval_http}
+z_http <- rnz::open_nz("https://usgs.osn.mghpcc.org/mdmf/gdp/gridMET.zarr")
+
+rnz::inq_dim(z_http, 0)
+```
+
 That's all for now.
 
 ```{r include = FALSE}

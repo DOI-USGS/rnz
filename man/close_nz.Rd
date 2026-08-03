@@ -4,6 +4,7 @@
 \alias{close_nz}
 \alias{close_nz.NetCDF}
 \alias{close_nz.ZarrGroup}
+\alias{close_nz.NZCloud}
 \alias{close_nz.NULL}
 \title{close netcdf or zarr
 Closes handle. Doesn't currently do anything for zarr stores.}
@@ -13,6 +14,8 @@ close_nz(z)
 \method{close_nz}{NetCDF}(z)
 
 \method{close_nz}{ZarrGroup}(z)
+
+\method{close_nz}{NZCloud}(z)
 
 \method{close_nz}{`NULL`}(z)
 }

@@ -19,6 +19,42 @@ nc_file <- z_demo(format = "netcdf")
 nc <- open_nz(nc_file, backend = "RNetCDF")
 
 # ---------------------------------------------------------------------------
+# Cloud store fixtures (test_cloud.R).
+#
+# Both stores are public, consolidated, and reachable at two addresses -- a
+# cloud URL and the equivalent HTTPS URL serving the same bytes. That pairing
+# is what makes the cloud route checkable: the HTTPS route is the reference.
+#
+# gridMET: USGS meteorology on an Open Storage Network pod, reached with an
+# alternate S3 endpoint. ECCO_basins: a small Pangeo mask on Google Cloud
+# Storage, whose `basin_mask` is big-endian `>f4`.
+# ---------------------------------------------------------------------------
+
+gridmet_s3 <- "s3://mdmf/gdp/gridMET.zarr"
+gridmet_https <- "https://usgs.osn.mghpcc.org/mdmf/gdp/gridMET.zarr"
+gridmet_endpoint <- "https://usgs.osn.mghpcc.org"
+
+ecco_gs <- "gs://pangeo-data/ECCO_basins.zarr"
+ecco_https <- "https://storage.googleapis.com/pangeo-data/ECCO_basins.zarr"
+
+# The cloud routes need the zarrs backend with the relevant feature compiled
+# in and pizzarr >= 0.2.1 for zarrs_get_key(). The CRAN pizzarr build has
+# neither, so tests and vignette chunks gate on this.
+have_cloud <- function(feature) {
+  if(!requireNamespace("pizzarr", quietly = TRUE)) return(FALSE)
+  if(!requireNamespace("jsonlite", quietly = TRUE)) return(FALSE)
+  if(!exists("zarrs_get_key", envir = asNamespace("pizzarr"))) return(FALSE)
+
+  feats <- tryCatch(pizzarr::pizzarr_compiled_features(),
+                    error = function(e) character(0))
+
+  feature %in% feats
+}
+
+have_s3 <- function() have_cloud("s3")
+have_gcs <- function() have_cloud("gcs")
+
+# ---------------------------------------------------------------------------
 # Fixture builders for the NZ-1.0 / v3 TDD scaffold (test_nz_v3.R).
 # All builders return a ZarrGroup backed by an in-memory MemoryStore.
 # All require pizzarr (>= 0.1.3) for the v3 dimension_names API.
