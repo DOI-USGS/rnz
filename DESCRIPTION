@@ -11,6 +11,8 @@ Authors@R:
 Description: Implements a RNetCDF-like set of functions for NetCDF and zarr data based on the pizzarr package.
 Depends: R (>= 4.1.0)
 Imports: tools, utils, RNetCDF
+Remotes:
+    zarr-developers/pizzarr@develop
 Suggests:
     pizzarr (>= 0.2.1),
     blosc,
